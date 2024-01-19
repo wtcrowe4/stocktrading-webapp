@@ -2,6 +2,7 @@ import os
 from dotenv import load_dotenv
 import sqlite3
 import alpaca_trade_api as tradeapi
+import datetime
 
 load_dotenv()
 alpaca_api_key = os.getenv('ALPACA_API_KEY')
@@ -33,6 +34,9 @@ for asset in assets:
         print(e)
 
 #scheduled task to keep up to date
-                
+#command line to put out to a log file
+#>> /logs/populate_log.txt 2>&1
+timestamp = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+print(timestamp)                
 
 conn.commit()
