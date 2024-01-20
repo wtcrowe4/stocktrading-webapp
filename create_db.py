@@ -1,6 +1,11 @@
 import sqlite3
+import os
+import dotenv
 
-conn = sqlite3.connect('database.db')
+dotenv.load_dotenv()
+db_url = os.getenv('DATABASE_URL')
+
+conn = sqlite3.connect(db_url)
 
 cursor = conn.cursor()
 

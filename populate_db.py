@@ -7,8 +7,10 @@ import datetime
 load_dotenv()
 alpaca_api_key = os.getenv('ALPACA_API_KEY')
 alpaca_api_secret = os.getenv('ALPACA_API_SECRET')
+alpaca_base_url = os.getenv('ALPACA_BASE_URL')
+db_url = os.getenv('DATABASE_URL')
 
-conn = sqlite3.connect('database.db')
+conn = sqlite3.connect(db_url)
 conn.row_factory = sqlite3.Row
 
 cursor = conn.cursor()
@@ -20,7 +22,7 @@ symbols = [symbol['symbol'] for symbol in symbols]
 
 
 #populating db with stock symbols and company names
-api = tradeapi.REST(alpaca_api_key, alpaca_api_secret, base_url='https://paper-api.alpaca.markets')
+api = tradeapi.REST(alpaca_api_key, alpaca_api_secret, base_url=alpaca_base_url)
 assets = api.list_assets()
 
 for asset in assets:
