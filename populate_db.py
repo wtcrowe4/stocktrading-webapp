@@ -61,9 +61,11 @@ for i in range(0, len(symbols), chunk_size):
     symbol_chunk = symbols[i:i+chunk_size]
     try:
         print('processing symbols', symbol_chunk)
-        
+        #remove '/' from symbol for api call
+        for symbol in symbol_chunk:
+            if '/' in symbol:
+                symbol = symbol.replace('/', '')
         barsets = api.get_bars(symbol_chunk, TimeFrame.Day, start=start_date, end=end_date)
-        #error here with barsets
         #print(barsets)
         for bar in barsets:
             print(f'Processing symbol {bar.S} for date {bar.t.date()}')

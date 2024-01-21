@@ -21,5 +21,5 @@ api = tradeapi.REST(alpaca_api_key, alpaca_api_secret, base_url=alpaca_data_url)
 #testing
 #problem with symbol 'AAVE/USD'
 
-testbars = api.get_bars(['AAVE/USD'], TimeFrame.Day, '2024-01-15', '2024-01-20', adjustment='raw').df
+testbars = api.get_bars(['BTC'], TimeFrame.Day, '2024-01-01', '2024-01-20')
 print(testbars)
