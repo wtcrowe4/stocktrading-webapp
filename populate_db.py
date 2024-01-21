@@ -24,7 +24,7 @@ symbols = cursor.fetchall()
 symbols = [symbol['symbol'] for symbol in symbols]
 
 
-#api
+#populating db with stock symbols
 api = tradeapi.REST(alpaca_api_key, alpaca_api_secret, base_url=alpaca_base_url)
 assets = api.list_assets()
 
@@ -38,32 +38,73 @@ for asset in assets:
         print(asset.symbol)
         print(e)
 
+
+
 #scheduled task to keep up to date
 #command line to put out to a log file
 #>> /logs/populate_log.txt 2>&1
-timestamp = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-print(timestamp)                
-
+#timestamp = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+#print(timestamp)                
 
 #populating db with stock price daily historical data
-bars_db = api.get_bars(['AAPL', 'MSFT'], TimeFrame.Day, '2023-01-01', '2023-01-20')
-bars_df = api.get_bars(['AAPL', 'MSFT'], TimeFrame.Day, '2023-01-01', '2023-01-20', adjustment='raw').df
-print(bars_df)
+#bars_db = api.get_bars(['AAPL', 'MSFT'], TimeFrame.Day, '2023-01-01', '2023-01-20')
+#bars_df = api.get_bars(['AAPL', 'MSFT'], TimeFrame.Day, '2023-01-01', '2023-01-20', adjustment='raw').df
+#print(bars_df)
 
-for bar in bars_db:
-    print(f'Processing symbol {bar.S} for date {bar.t.date()}')
-    cursor.execute('SELECT id FROM stock WHERE symbol=?', (bar.S,))
-    stock_id = cursor.fetchone()[0]
+#chunking and getting all daily data for last week
+chunk_size = 200
+start_date = '2024-01-15'
+end_date = '2024-01-19'
 
-    #check if the stock price is already in the db
-    timestamp_str = bar.t.strftime('%H:%M:%S')
-    cursor.execute('SELECT id FROM stock_price WHERE stock_id=? AND date=?', (stock_id, bar.t.date()))
-    stock_price_id = cursor.fetchone()
-    if stock_price_id:
-        print('Stock price already exists')
-    else:
-        cursor.execute('INSERT INTO stock_price (stock_id, date, timestamp, open, high, low, close, volume) VALUES (?, ?, ?, ?, ?, ?, ?, ?)', 
-        (stock_id, bar.t.date(), timestamp_str, bar.o, bar.h, bar.l, bar.c, bar.v))
+
+for i in range(0, len(symbols), chunk_size):
+    symbol_chunk = symbols[i:i+chunk_size]
+    try:
+        print('processing symbols', symbol_chunk)
+        
+        barsets = api.get_bars(symbol_chunk, TimeFrame.Day, start=start_date, end=end_date)
+        #error here with barsets
+        #print(barsets)
+        for bar in barsets:
+            print(f'Processing symbol {bar.S} for date {bar.t.date()}')
+            cursor.execute('SELECT id FROM stock WHERE symbol=?', (bar.S,))
+            stock_id = cursor.fetchone()[0]
+            timestamp_str = bar.t.strftime('%H:%M:%S')
+            cursor.execute('SELECT id FROM stock_price WHERE stock_id=? AND date=? AND timestamp=?', (stock_id, bar.t.date(), timestamp_str))
+            stock_price_id = cursor.fetchone()
+            if stock_price_id:
+                print('Stock price already exists')
+            else:
+                cursor.execute('INSERT INTO stock_price (stock_id, date, timestamp, open, high, low, close, volume) VALUES (?, ?, ?, ?, ?, ?, ?, ?)', 
+                (stock_id, bar.t.date(), timestamp_str, bar.o, bar.h, bar.l, bar.c, bar.v))
+    except Exception as e:
+        print(f'Error occurred while getting bars: {e}')
+
+
+
+
+
+
+
+
+# for bar in bars_db:
+#     print(f'Processing symbol {bar.S} for date {bar.t.date()}')
+#     cursor.execute('SELECT id FROM stock WHERE symbol=?', (bar.S,))
+#     stock_id = cursor.fetchone()[0]
+
+#     #check if the stock price is already in the db
+#     timestamp_str = bar.t.strftime('%H:%M:%S')
+#     cursor.execute('SELECT id FROM stock_price WHERE stock_id=? AND date=?', (stock_id, bar.t.date()))
+#     stock_price_id = cursor.fetchone()
+#     if stock_price_id:
+#         print('Stock price already exists')
+#     else:
+#         cursor.execute('INSERT INTO stock_price (stock_id, date, timestamp, open, high, low, close, volume) VALUES (?, ?, ?, ?, ?, ?, ?, ?)', 
+#         (stock_id, bar.t.date(), timestamp_str, bar.o, bar.h, bar.l, bar.c, bar.v))
+
+
+
+
 
 
 #get minute data
