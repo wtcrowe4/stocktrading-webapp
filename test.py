@@ -17,9 +17,9 @@ conn = sqlite3.connect(db_url)
 
 cursor = conn.cursor()
 
-api = tradeapi.REST(alpaca_api_key, alpaca_api_secret, base_url=alpaca_data_url)
+api = tradeapi.REST(alpaca_api_key, alpaca_api_secret, base_url=alpaca_base_url)
 #testing
 #problem with symbol 'AAVE/USD'
 
-testbars = api.get_bars(['BTC'], TimeFrame.Day, '2024-01-01', '2024-01-20')
+testbars = api.get_bars(['MSFT'], TimeFrame.Day, '2024-01-01', '2024-01-20')
 print(testbars)
