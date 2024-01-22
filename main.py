@@ -1,4 +1,5 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
+from fastapi.templating import Jinja2Templates
 import sqlite3
 import os
 import dotenv
@@ -8,17 +9,18 @@ dotenv.load_dotenv()
 db_url = os.getenv('DATABASE_URL')
 
 app = FastAPI()
+templates = Jinja2Templates(directory="templates")
 
 @app.get("/")
-async def root():
+async def root(request: Request):
     conn = sqlite3.connect(db_url)
+    conn.row_factory = sqlite3.Row  
     cursor = conn.cursor()
-    conn.row_factory = sqlite3.Row
-    cursor.execute("SELECT symbol FROM stock")
+    cursor.execute("SELECT * FROM stock")
     rows = cursor.fetchall()
-    return {"message": rows}
+    return templates.TemplateResponse("index.html", {"request": request, "stocks": rows})
     
-    #return {"message": "Home page"}
+    
 
 @app.get("/stocks")
 async def stocks():
