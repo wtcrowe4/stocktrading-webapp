@@ -16,6 +16,7 @@
                 <tr>
                     <th>Symbol</th>
                     <th>Name</th>
+                    <th>Recent Close</th>
                 </tr>
             </thead>
             <tbody>
@@ -23,6 +24,7 @@
                 <tr>
                     <td>{{ stock.symbol }}</td>
                     <td>{{ stock.name }}</td>
+                    <td>{{ stock.recent_price }}</td>
                 </tr>
                 {% endfor %}
             </tbody>

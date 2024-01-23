@@ -56,6 +56,7 @@ chunk_size = 200
 start_date = '2024-01-15'
 end_date = '2024-01-19'
 
+#ran until 'XTZ/USD' then got same error
 
 for i in range(0, len(symbols), chunk_size):
     symbol_chunk = symbols[i:i+chunk_size]
