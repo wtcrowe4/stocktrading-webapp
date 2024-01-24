@@ -64,7 +64,7 @@ async def root(request: Request):
         
 
     
-    return templates.TemplateResponse("index.html", {"request": request, "stocks": rows})
+    return templates.TemplateResponse("home.html", {"request": request, "stocks": rows})
     
     
 

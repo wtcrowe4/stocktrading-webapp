@@ -1,37 +1,25 @@
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="utf-8">
-        <title>Home</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="stylesheet"
-              href="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css">
-    </head>
-
-    <body>
-        <div class="ui container">
-            <h1 class="ui header center aligned">{{ stock.name }}</h1>
-            <div class="ui divider"></div>
-            <h2 class="ui header center aligned">Stock Data</h2>
-            <table class="ui selectable inverted table">
-                <thead>
-                    <tr>
-                        <th>Date</th>
-                        <th>Open</th>
-                        <th>Close</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for price in prices %}
-                    <tr>
-                        <td>{{ price.date }}</td>
-                        <td>{{ price.open }}</td>
-                        <td>{{ price.close }}</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-    </body>
-</html>
+{% extends "index.html" %}
+{% block content %}
+    <h1 class="ui header center aligned">{{ stock.name }}</h1>
+    <div class="ui divider"></div>
+    <h2 class="ui header center aligned">Stock Data</h2>
+    <table class="ui selectable inverted table">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Open</th>
+                <th>Close</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for price in prices %}
+                <tr>
+                    <td>{{ price.date }}</td>
+                    <td>{{ price.open }}</td>
+                    <td>{{ price.close }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
 
