@@ -16,7 +16,7 @@ async def root(request: Request):
     conn = sqlite3.connect(db_url)
     conn.row_factory = sqlite3.Row  
     cursor = conn.cursor()
-    cursor.execute("SELECT * FROM stock")
+    cursor.execute("SELECT * FROM stock ORDER BY symbol")
     rows = cursor.fetchall()
     
 
