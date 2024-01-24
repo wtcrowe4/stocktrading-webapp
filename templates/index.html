@@ -9,26 +9,29 @@
     </head>
 
     <body>
-        <h1 class="ui header center aligned">Home</h1>
-        <h3 class="ui header center aligned">Welcome to our home page!</h3>
-        <table class="ui selectable inverted table">
-            <thead>
-                <tr>
-                    <th>Symbol</th>
-                    <th>Name</th>
-                    <th>Recent Close</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for stock in stocks %}
-                <tr>
-                    <td>{{ stock.symbol }}</td>
-                    <td>{{ stock.name }}</td>
-                    <td>{{ stock.recent_price }}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-
+        <div class="ui container">
+            <h1 class="ui header center aligned">Home</h1>
+            <div class="ui divider"></div>
+            <h2 class="ui header center aligned">Stocks</h2>
+            <table class="ui selectable inverted table">
+                <thead>
+                    <tr>
+                        <th>Symbol</th>
+                        <th>Name</th>
+                        <th>Recent Close</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for stock in stocks %}
+                    <tr>
+                        <td>{{ stock.symbol }}</td>
+                        <td><a href="/stock/{{  stock.symbol  }}">{{ stock.name }}</a></td>
+                        <!-- <td>{{ stock.recent_price }}</td> -->
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
     </body>
 </html>
 
