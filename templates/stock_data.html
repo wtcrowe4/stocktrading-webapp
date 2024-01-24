@@ -8,7 +8,10 @@
             <tr>
                 <th>Date</th>
                 <th>Open</th>
+                <th>High</th>
+                <th>Low</th>
                 <th>Close</th>
+                <th>Volume</th>
             </tr>
         </thead>
         <tbody>
@@ -16,7 +19,10 @@
                 <tr>
                     <td>{{ price.date }}</td>
                     <td>{{ price.open }}</td>
+                    <td>{{ price.high }}</td>
+                    <td>{{ price.low }}</td>
                     <td>{{ price.close }}</td>
+                    <td>{{ price.volume }}</td>
                 </tr>
             {% endfor %}
         </tbody>
