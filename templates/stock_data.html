@@ -10,27 +10,23 @@
 
     <body>
         <div class="ui container">
-            <h1 class="ui header center aligned">Home</h1>
+            <h1 class="ui header center aligned">{{ stock.name }}</h1>
             <div class="ui divider"></div>
-            <h2 class="ui header center aligned">Stocks</h2>
-            <div class="ui fluid icon input">
-                <input type="text" placeholder="Search stocks..." id="searchInput">
-                <i class="search icon"></i>
-            </div>
+            <h2 class="ui header center aligned">Stock Data</h2>
             <table class="ui selectable inverted table">
                 <thead>
                     <tr>
-                        <th>Symbol</th>
-                        <th>Name</th>
-                        <th>Recent Close</th>
+                        <th>Date</th>
+                        <th>Open</th>
+                        <th>Close</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {% for stock in stocks %}
+                    {% for price in prices %}
                     <tr>
-                        <td>{{ stock.symbol }}</td>
-                        <td><a href="/stock/{{  stock.symbol  }}">{{ stock.name }}</a></td>
-                        <!-- <td>{{ stock.recent_price }}</td> -->
+                        <td>{{ price.date }}</td>
+                        <td>{{ price.open }}</td>
+                        <td>{{ price.close }}</td>
                     </tr>
                     {% endfor %}
                 </tbody>
@@ -38,7 +34,4 @@
         </div>
     </body>
 </html>
-
-
-
 

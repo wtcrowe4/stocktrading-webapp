@@ -19,6 +19,9 @@ async def root(request: Request):
     cursor.execute("SELECT * FROM stock")
     rows = cursor.fetchall()
     
+
+    
+    
     
     
     
@@ -66,8 +69,19 @@ async def root(request: Request):
     
 
 @app.get("/stock/{symbol}")
-async def stock():
-    return {"message": "Specific stock data"}
+async def stock_data(request: Request, symbol):
+    conn = sqlite3.connect(db_url)
+    conn.row_factory = sqlite3.Row
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM stock WHERE symbol=?", (symbol,))
+    row = cursor.fetchone()
+    
+    cursor.execute("SELECT * FROM stock_price WHERE stock_id=?", (row['id'],))
+    prices = cursor.fetchall()
+    
+    return templates.TemplateResponse("stock_data.html", {"request": request, "prices": prices, "stock": row})
+
+    
 
 
 # @app.get("/stocks/{symbol}")
