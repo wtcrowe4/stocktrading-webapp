@@ -49,30 +49,17 @@ async def stock_data(request: Request, symbol):
     cursor = conn.cursor()
     cursor.execute("SELECT * FROM stock WHERE symbol=?", (symbol,))
     row = cursor.fetchone()
-    
+    print(row['id'])
     cursor.execute("SELECT * FROM stock_price WHERE stock_id=?", (row['id'],))
     prices = cursor.fetchall()
     
+    print(prices)
     return templates.TemplateResponse("stock_data.html", {"request": request, "prices": prices, "stock": row})
 
     
 
 
-# @app.get("/stocks/{symbol}")
-# async def stock(symbol):
-#     return {"message": "Hello World"}
 
-# @app.get("/stocks/{symbol}/bars")
-# async def bars(symbol):
-#     return {"message": "Hello World"}
-
-# @app.get("/stocks/{symbol}/bars/{start}/{end}")
-# async def bars(symbol, start, end):
-#     return {"message": "Hello World"}
-
-# @app.get("/stocks/{symbol}/bars/{start}/{end}/{timeframe}")
-# async def bars(symbol, start, end, timeframe):
-#     return {"message": "Hello World"}
 
 
 

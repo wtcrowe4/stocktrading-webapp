@@ -52,7 +52,7 @@ for asset in assets:
 #print(bars_df)
 
 #chunking and getting all daily data for last week
-chunk_size = 200
+chunk_size = 50
 start_date = '2024-01-15'
 end_date = '2024-01-19'
 
