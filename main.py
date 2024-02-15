@@ -1,5 +1,6 @@
 from fastapi import FastAPI, Request
 from fastapi.templating import Jinja2Templates
+from fastapi.staticfiles import StaticFiles
 import sqlite3
 import os
 import dotenv
@@ -9,6 +10,7 @@ dotenv.load_dotenv()
 db_url = os.getenv('DATABASE_URL')
 
 app = FastAPI()
+app.mount("/assets", StaticFiles(directory="assets"), name="assets")
 templates = Jinja2Templates(directory="templates")
 
 @app.get("/")
