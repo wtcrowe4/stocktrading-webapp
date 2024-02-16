@@ -19,10 +19,14 @@
             {% for stock in stocks %}
             <tr>
                 <td>{{ stock.symbol }}</td>
-                <td><a href="/stock/{{  stock.symbol  }}">{{ stock.name }}</a></td>
-                <!-- <td>{{ stock.recent_price }}</td> -->
+                <td><a style="color: lightgrey;" href="/stock/{{  stock.symbol  }}">{{ stock.name }}</a></td>
+                <td>{{ stock.recent_price }}</td>
             </tr>
             {% endfor %}
         </tbody>
     </table>
+    <div class="ui pagination menu">
+        <a class="item" href="?page={{ prev_page }}">Previous</a>
+        <a class="item" href="?page={{ next_page }}">Next</a>
+    </div>
 {% endblock %}
