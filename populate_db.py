@@ -52,9 +52,9 @@ for asset in assets:
 #print(bars_df)
 
 #chunking and getting all daily data for last week
-chunk_size = 50
-start_date = '2024-01-15'
-end_date = '2024-01-19'
+chunk_size = 20
+start_date = '2024-01-01'
+end_date = '2024-02-16'
 
 #ran until 'XTZ/USD' then got same error
 
