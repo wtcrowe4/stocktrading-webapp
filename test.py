@@ -20,6 +20,22 @@ cursor = conn.cursor()
 api = tradeapi.REST(alpaca_api_key, alpaca_api_secret, base_url=alpaca_base_url)
 #testing
 #problem with symbol 'AAVE/USD'
+start_date = '2024-01-01'
+end_date = '2024-02-14'
 
-testbars = api.get_bars(['BTC/USD'], TimeFrame.Day, '2024-01-01', '2024-01-20')
-print(testbars)
+slash_assets = cursor.execute('SELECT symbol FROM stock WHERE symbol LIKE "%/%"').fetchall()
+print(slash_assets)
+
+for asset in slash_assets:
+    symbol = asset[0]
+    symbol = symbol.replace('/', '')
+    print(symbol)
+    bars = api.get_bars([symbol], TimeFrame.Day, start_date, end_date).df
+    print(bars)
+    
+
+
+# asset = api.get_asset('BATUSD')
+# testbars = api.get_bars(['BATUSD'], TimeFrame.Day, start_date, end_date).df
+# print(asset)
+# print(testbars)
