@@ -54,7 +54,7 @@ for asset in assets:
 #chunking and getting all daily data for last week
 chunk_size = 20
 start_date = '2024-01-01'
-end_date = '2024-02-16'
+end_date = '2024-02-15'
 
 #ran until 'XTZ/USD' then got same error
 
