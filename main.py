@@ -14,11 +14,14 @@ app.mount("/assets", StaticFiles(directory="assets"), name="assets")
 templates = Jinja2Templates(directory="templates")
 
 @app.get("/")
-async def root(request: Request):
+async def root(request: Request, page: int = 0, searchInput: str = None):
     conn = sqlite3.connect(db_url)
     conn.row_factory = sqlite3.Row  
     cursor = conn.cursor()
-    cursor.execute("SELECT * FROM stock ORDER BY symbol")
+    offset = page * 50
+    if searchInput:
+        cursor.execute("SELECT * FROM stock WHERE symbol LIKE ? ORDER BY symbol LIMIT 50", (f'%{searchInput}%',))
+    cursor.execute("SELECT * FROM stock ORDER BY symbol LIMIT 50 OFFSET ?", (offset,))
     rows = cursor.fetchall()
     
     #Get the most recent closing price for each stock to display on home page
@@ -42,7 +45,7 @@ async def root(request: Request):
         stock = stock_dict
         print(stock['symbol'] ,stock['recent_price'])
         stocks.append(stock)
-        
+
     return templates.TemplateResponse("home.html", {"request": request, "stocks": stocks})
     
     
