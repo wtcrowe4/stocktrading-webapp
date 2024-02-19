@@ -13,13 +13,24 @@
                                     background-size: cover; 
                                     background-attachment:fixed; 
                                     background-position-x: center;  ">
-        <div class="ui menu">
+        <div class="ui menu header" >
             <div class="header item">
                 <img src="../assets/chart-dark.png" alt="candle-stick-chart" />
                 Full Stock
             </div>
+
+            <nav class="right menu">
+                <a class="item" href="/">Home</a>
+                <a class="item" href="/popular">Popular</a>
+                <a class="item" href="/recent">Recent</a>
+                <a class="item" href="/new_intraday_highs">New Intraday Highs</a>
+                <a class="item" href="/new_intraday_lows">New Intraday Lows</a>
+                <a class="item" href="/new_closing_highs">New Closing Highs</a>
+                <a class="item" href="/new_closing_lows">New Closing Lows</a>
+            </nav>
+
             <form class="ui item" method="get">
-                <select class="ui dropdown" name="filter" title="filter">
+                <select class="ui dropdown" name="filter" title="filter" default="{{ stock_filter }}" >
                     <option value="all">All</option>
                     <option value="recent">Recent</option>
                     <option value="popular">Popular</option>
@@ -30,6 +41,7 @@
                 </select>
                 <input class="ui button" type="submit">
             </form>
+            
         </div>
 
         
