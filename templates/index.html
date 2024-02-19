@@ -13,11 +13,26 @@
                                     background-size: cover; 
                                     background-attachment:fixed; 
                                     background-position-x: center;  ">
-            <!-- <i class="chart area icon"></i> -->
-        <h1 class="ui header">
-            <img src="../assets/chart-dark.png" alt="candle-stick-chart" />
-            <div class="content">Full Stock</div>
-        </h1>
+        <div class="ui menu">
+            <div class="header item">
+                <img src="../assets/chart-dark.png" alt="candle-stick-chart" />
+                Full Stock
+            </div>
+            <form class="ui item" method="get">
+                <select class="ui dropdown" name="filter" title="filter">
+                    <option value="all">All</option>
+                    <option value="recent">Recent</option>
+                    <option value="popular">Popular</option>
+                    <option value="new_intraday_highs">New Intraday Highs</option>
+                    <option value="new_intraday_lows">New Intraday Lows</option>
+                    <option value="new_closing_highs">New Closing Highs</option>
+                    <option value="new_closing_lows">New Closing Lows</option>
+                </select>
+                <input class="ui button" type="submit">
+            </form>
+        </div>
+
+        
         
         
 
