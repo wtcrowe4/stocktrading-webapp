@@ -19,8 +19,12 @@ async def root(request: Request, page: int = 0, searchInput: str = None):
     conn.row_factory = sqlite3.Row  
     cursor = conn.cursor()
     offset = page * 50
+    
     if searchInput:
+        
         cursor.execute("SELECT * FROM stock WHERE symbol LIKE ? ORDER BY symbol LIMIT 50", (f'%{searchInput}%',))
+    
+    
     cursor.execute("SELECT * FROM stock ORDER BY symbol LIMIT 50 OFFSET ?", (offset,))
     rows = cursor.fetchall()
     
