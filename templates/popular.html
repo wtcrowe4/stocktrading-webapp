@@ -1,0 +1,32 @@
+{% extends "index.html" %}
+{% block content %}
+    <h1 class="ui header center aligned">Home</h1>
+    <div class="ui divider"></div>
+    <h2 class="ui header center aligned">Stocks</h2>
+    <div class="ui fluid icon input">
+        <input type="text" placeholder="Search stocks..." id="searchInput">
+        <i class="search icon"></i>
+    </div>
+    <table class="ui selectable inverted table">
+        <thead>
+            <tr>
+                <th>Symbol</th>
+                <th>Name</th>
+                <th>Date</th>
+                <th>Volume</th>
+
+            </tr>
+        </thead>
+        <tbody>
+            {% for stock in stocks %}
+            <tr>
+                <td>{{ stock.symbol }}</td>
+                <td><a style="color: lightgrey;" href="/stock/{{  stock.symbol  }}">{{ stock.name }}</a></td>
+                <td>{{ stock.date }}</td>
+                <td>{{ stock.volume }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock %}

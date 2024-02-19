@@ -15,34 +15,7 @@ templates = Jinja2Templates(directory="templates")
 
 @app.get("/")
 async def root(request: Request, page: int = 0, searchInput: str = None):
-    #dropdown filter
-    stock_filter = request.query_params.get('filter', None)
-    if stock_filter == 'new_intraday_highs':
-        conn = sqlite3.connect(db_url)
-        conn.row_factory = sqlite3.Row
-        cursor = conn.cursor()
-        cursor.execute("""
-            SELECT stock_id, MAX(high) as high
-            FROM stock_price
-            WHERE date = (SELECT MAX(date) FROM stock_price)
-            GROUP BY stock_id
-            ORDER BY date DESC
-            LIMIT 50
-        """)
-        recent_highs = cursor.fetchall()
-        recent_highs_dict = {row['stock_id']: row['high'] for row in recent_highs}
-        cursor.execute("SELECT * FROM stock WHERE id IN ({})".format(','.join(str(row['stock_id']) for row in recent_highs)))
-        rows = cursor.fetchall()
-        stocks = []
-        for stock in rows:
-            stock_dict = dict(stock)
-            stock_dict['recent_high'] = recent_highs_dict.get(stock_dict['id'], None)
-            if stock_dict['recent_high'] is not None:
-                stock_dict['recent_high'] = round(stock_dict['recent_high'], 2)
-            stock = stock_dict
-            stocks.append(stock)
-            
-        return templates.TemplateResponse("home.html", {"request": request, "stocks": stocks})          
+          
     #pagination
     # Get the 'page' query parameter
     # page = request.query_params.get('page', 0)
@@ -92,7 +65,7 @@ async def root(request: Request, page: int = 0, searchInput: str = None):
     return templates.TemplateResponse("home.html", {"request": request, "stocks": stocks})
     
     
-
+#Page for individual stock data
 @app.get("/stock/{symbol}")
 async def stock_data(request: Request, symbol):
     conn = sqlite3.connect(db_url)
@@ -107,7 +80,30 @@ async def stock_data(request: Request, symbol):
     return templates.TemplateResponse("stock_data.html", {"request": request, "prices": prices, "stock": row})
 
     
+#Page for Popular Stocks
+@app.get("/popular")
+async def popular_stocks(request: Request):
+    conn = sqlite3.connect(db_url)
+    conn.row_factory = sqlite3.Row
+    cursor = conn.cursor()
+    cursor.execute("""
+        SELECT symbol, name, date, volume
+        FROM stock JOIN stock_price ON stock.id = stock_price.stock_id
+        GROUP BY volume
+        ORDER BY volume DESC
+        LIMIT 50
+    """)
+    rows = cursor.fetchall()
 
+    
+
+    
+      
+    
+        
+
+    
+    return templates.TemplateResponse("popular.html", {"request": request, "stocks": rows, })
 
 
 
