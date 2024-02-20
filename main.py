@@ -94,18 +94,25 @@ async def popular_stocks(request: Request):
         LIMIT 50
     """)
     rows = cursor.fetchall()
-
-    
-
-    
-      
-    
-        
-
     
     return templates.TemplateResponse("popular.html", {"request": request, "stocks": rows, })
 
-
+#Page for Recent Stocks
+@app.get("/recent")
+async def recent_stocks(request: Request):
+    conn = sqlite3.connect(db_url)
+    conn.row_factory = sqlite3.Row
+    cursor = conn.cursor()
+    cursor.execute("""
+        SELECT symbol, name, date, close
+        FROM stock JOIN stock_price ON stock.id = stock_price.stock_id
+        GROUP BY date
+        ORDER BY date DESC
+        LIMIT 50
+    """)
+    rows = cursor.fetchall()
+    
+    return templates.TemplateResponse("recent.html", {"request": request, "stocks": rows, })
 
 
 
