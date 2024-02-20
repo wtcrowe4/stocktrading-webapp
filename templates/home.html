@@ -3,10 +3,18 @@
     <h1 class="ui header center aligned">Home</h1>
     <div class="ui divider"></div>
     <h2 class="ui header center aligned">Stocks</h2>
-    <div class="ui fluid icon input">
-        <input type="text" placeholder="Search stocks..." id="searchInput">
-        <i class="search icon"></i>
-    </div>
+    
+    
+    <form action="/?search={{ searchInput }}" method="get">
+       <div class="ui fluid icon input">
+            <input type="text" placeholder="Search stocks..." id="searchInput" name="searchInput">
+            <i class="search icon"></i>
+        </div>
+        <button type="submit" class="ui button" id="searchButton">Search</button>
+    </form>
+    
+    
+    <div class="ui divider"></div>
     <table class="ui selectable inverted table">
         <thead>
             <tr>
