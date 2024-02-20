@@ -66,6 +66,10 @@ async def root(request: Request, page: int = 0, searchInput: str = None):
     
     
 #Page for individual stock data
+# If visited, add this stock to a list of recently visited stocks
+# If the stock is already in the list, move it to the top
+# If the list is longer than 20, remove the oldest stock
+user_recent_stocks = []
 @app.get("/stock/{symbol}")
 async def stock_data(request: Request, symbol):
     conn = sqlite3.connect(db_url)
@@ -77,6 +81,12 @@ async def stock_data(request: Request, symbol):
     cursor.execute("SELECT * FROM stock_price WHERE stock_id=?", (row['id'],))
     prices = cursor.fetchall()
     
+    #recently visited stocks
+    user_recent_stocks.insert(0, row['id'])
+    if len(user_recent_stocks) > 20:
+        user_recent_stocks.pop()
+    print(user_recent_stocks)
+
     return templates.TemplateResponse("stock_data.html", {"request": request, "prices": prices, "stock": row})
 
     
@@ -100,19 +110,27 @@ async def popular_stocks(request: Request):
 #Page for Recent Stocks
 @app.get("/recent")
 async def recent_stocks(request: Request):
+    #for user recent stocks array get the stock information and the latest stock prices
+    print(user_recent_stocks)
     conn = sqlite3.connect(db_url)
     conn.row_factory = sqlite3.Row
     cursor = conn.cursor()
-    cursor.execute("""
-        SELECT symbol, name, date, close
-        FROM stock JOIN stock_price ON stock.id = stock_price.stock_id
-        GROUP BY date
-        ORDER BY date DESC
-        LIMIT 50
-    """)
-    rows = cursor.fetchall()
+    stocks=[]
+    for stock_id in user_recent_stocks:
+        cursor.execute("SELECT * FROM stock WHERE id=?", (stock_id,))
+        row = cursor.fetchone()
+        stocks.append(row)
+    recent_prices = []
+    for stock_id in user_recent_stocks:
+        cursor.execute("SELECT * FROM stock_price WHERE stock_id=? ORDER BY date DESC LIMIT 1", (stock_id,))
+        row = cursor.fetchone()
+        recent_prices.append(row)
+
     
-    return templates.TemplateResponse("recent.html", {"request": request, "stocks": rows, })
+
+
+    
+    return templates.TemplateResponse("recent.html", {"request": request, "stocks": stocks, "prices": recent_prices})
 
 
 
