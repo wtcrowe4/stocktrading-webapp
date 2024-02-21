@@ -107,6 +107,7 @@ async def popular_stocks(request: Request):
 @app.get("/recent")
 async def recent_stocks(request: Request):
     #for user recent stocks array get the stock information and the latest stock prices
+    user_recent_stocks = list(dict.fromkeys(user_recent_stocks))    
     print(user_recent_stocks)
     conn = sqlite3.connect(db_url)
     conn.row_factory = sqlite3.Row
@@ -161,3 +162,37 @@ async def intraday_lows(request: Request):
     return templates.TemplateResponse("intraday.html", {"request": request, "stocks": rows})
 
 
+#Page for Closing Highs
+@app.get("/closing_highs")
+async def closing_highs(request: Request):
+    conn = sqlite3.connect(db_url)
+    conn.row_factory = sqlite3.Row
+    cursor = conn.cursor()
+    cursor.execute("""
+        SELECT symbol, name, date, MAX(close) 
+        FROM stock JOIN stock_price ON stock.id = stock_price.stock_id
+        GROUP BY stock_id
+        ORDER BY close DESC
+        LIMIT 50
+    """)
+    rows = cursor.fetchall()
+    
+    return templates.TemplateResponse("closing.html", {"request": request, "stocks": rows})
+
+
+#Page for Closing Lows
+@app.get("/closing_lows")
+async def closing_lows(request: Request):
+    conn = sqlite3.connect(db_url)
+    conn.row_factory = sqlite3.Row
+    cursor = conn.cursor()
+    cursor.execute("""
+        SELECT symbol, name, date, MIN(close) 
+        FROM stock JOIN stock_price ON stock.id = stock_price.stock_id
+        GROUP BY stock_id
+        ORDER BY close ASC
+        LIMIT 50
+    """)
+    rows = cursor.fetchall()
+    
+    return templates.TemplateResponse("closing.html", {"request": request, "stocks": rows})
