@@ -1,7 +1,7 @@
 {% extends "index.html" %}
 {% block content %}
     
-    <h1 class="ui header center aligned">Recent Stocks</h1>
+    <h1 class="ui white center aligned header">Recent Stocks</h1>
     <div class="ui divider"></div>
     <table class="ui selectable inverted table">
         <thead>
@@ -10,6 +10,7 @@
                 <th>Name</th>
                 <th>High</th>
                 <th>Low</th>
+                <th>Close</th>
                 <th>Date</th>
             </tr>
         </thead>
@@ -19,6 +20,7 @@
                 <td>{{ stock.symbol }}</td>
                 <td><a style="color: lightgrey;" href="/stock/{{  stock.symbol  }}">{{ stock.name }}</a></td>
                 <td>{{ stock.high }}</td>
+                <td>{{ stock.low }}</td>
                 <td>{{ stock.close }}</td>
                 <td>{{ stock.date }}</td>
             </tr>

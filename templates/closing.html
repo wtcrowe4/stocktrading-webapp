@@ -1,0 +1,27 @@
+{% extends "index.html" %}
+{% block content %}
+    
+    <h1 class="ui white center aligned header">Closing Data</h1>
+    <div class="ui divider"></div>
+    <table class="ui selectable inverted table">
+        <thead>
+            <tr>
+                <th>Symbol</th>
+                <th>Name</th>
+                <th>Close</th>
+                <th>Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for stock in stocks %}
+            <tr>
+                <td>{{ stock.symbol }}</td>
+                <td><a style="color: lightgrey;" href="/stock/{{  stock.symbol  }}">{{ stock.name }}</a></td>
+                <td>{{ stock.close }}</td>
+                <td>{{ stock.date }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock %}
