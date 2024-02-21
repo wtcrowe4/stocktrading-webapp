@@ -126,7 +126,7 @@ async def recent_stocks(request: Request):
     return templates.TemplateResponse("recent.html", {"request": request, "stocks": stocks, "prices": recent_prices})
 
 
-#Page for Intraday Data
+#Page for Intraday Highs
 @app.get("/intraday_highs")
 async def intraday_highs(request: Request):
     conn = sqlite3.connect(db_url)
@@ -157,6 +157,7 @@ async def intraday_lows(request: Request):
         LIMIT 50
     """)
     rows = cursor.fetchall()
+    
     return templates.TemplateResponse("intraday.html", {"request": request, "stocks": rows})
 
 
