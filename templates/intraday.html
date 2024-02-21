@@ -1,7 +1,7 @@
 {% extends "index.html" %}
 {% block content %}
     
-    <h1 class="ui header center aligned">Recent Stocks</h1>
+    <h1 class="ui header center aligned">Intraday Data</h1>
     <div class="ui divider"></div>
     <table class="ui selectable inverted table">
         <thead>
@@ -20,7 +20,7 @@
                 <td><a style="color: lightgrey;" href="/stock/{{  stock.symbol  }}">{{ stock.name }}</a></td>
                 <td>{{ stock.high }}</td>
                 <td>{{ stock.close }}</td>
-                <td>{{ stock.date }}</td>
+                <td>{{ stock.close }}</td>
             </tr>
             {% endfor %}
         </tbody>

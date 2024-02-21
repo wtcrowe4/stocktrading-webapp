@@ -17,12 +17,8 @@ templates = Jinja2Templates(directory="templates")
 async def root(request: Request, page: int = 0, searchInput: str = None):
           
     #pagination
-    # Get the 'page' query parameter
-    # page = request.query_params.get('page', 0)
-    # try:
-    #     page = int(page)
-    # except ValueError:
-    #     page = 0
+    
+    
 
     # Calculate the offset for the database query
     offset = page * 50
@@ -127,10 +123,40 @@ async def recent_stocks(request: Request):
         recent_prices.append(row)
 
     
-
-
-    
     return templates.TemplateResponse("recent.html", {"request": request, "stocks": stocks, "prices": recent_prices})
 
+
+#Page for Intraday Data
+@app.get("/intraday_highs")
+async def intraday_highs(request: Request):
+    conn = sqlite3.connect(db_url)
+    conn.row_factory = sqlite3.Row
+    cursor = conn.cursor()
+    cursor.execute("""
+        SELECT symbol, name, date, high
+        FROM stock JOIN stock_price ON stock.id = stock_price.stock_id
+        WHERE date = (SELECT MAX(date) FROM stock_price)
+        ORDER BY high DESC
+        LIMIT 50
+    """)
+    rows = cursor.fetchall()
+    return templates.TemplateResponse("intraday.html", {"request": request, "stocks": rows})
+
+
+#Page for Intraday Lows
+@app.get("/intraday_lows")
+async def intraday_lows(request: Request):
+    conn = sqlite3.connect(db_url)
+    conn.row_factory = sqlite3.Row
+    cursor = conn.cursor()
+    cursor.execute("""
+        SELECT symbol, name, date, low
+        FROM stock JOIN stock_price ON stock.id = stock_price.stock_id
+        WHERE date = (SELECT MAX(date) FROM stock_price)
+        ORDER BY low ASC
+        LIMIT 50
+    """)
+    rows = cursor.fetchall()
+    return templates.TemplateResponse("intraday.html", {"request": request, "stocks": rows})
 
 
