@@ -14,20 +14,20 @@ app.mount("/assets", StaticFiles(directory="assets"), name="assets")
 templates = Jinja2Templates(directory="templates")
 
 @app.get("/")
-async def root(request: Request, page: int = 0, searchInput: str = None):
-          
-    #pagination
+@app.get("/<int:page>")
+async def root(request: Request, page = 1, searchInput: str = None):
     
+    # Pagination
+    page = int(page)
+    offset = (page - 1) * 50
+   
+
     
-
-    # Calculate the offset for the database query
-    offset = page * 50
-
 
     conn = sqlite3.connect(db_url)
     conn.row_factory = sqlite3.Row  
     cursor = conn.cursor()
-    offset = page * 50
+    
     searchInput = request.query_params.get('search')
     if searchInput:
         
@@ -58,7 +58,7 @@ async def root(request: Request, page: int = 0, searchInput: str = None):
         stock = stock_dict
         stocks.append(stock)
 
-    return templates.TemplateResponse("home.html", {"request": request, "stocks": stocks})
+    return templates.TemplateResponse("home.html", {"request": request, "stocks": stocks, "page": page, "searchInput": searchInput})
     
     
 #Page for individual stock data
@@ -196,3 +196,21 @@ async def closing_lows(request: Request):
     rows = cursor.fetchall()
     
     return templates.TemplateResponse("closing.html", {"request": request, "stocks": rows})
+
+
+
+
+
+
+
+
+
+
+
+
+
+# Page for 404 not found errors
+@app.exception_handler(404)
+async def not_found(request, exc):
+    return templates.TemplateResponse("404.html", {"request": request}, status_code=404)
+
