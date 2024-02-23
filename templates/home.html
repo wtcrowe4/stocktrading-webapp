@@ -16,7 +16,7 @@
     
     
     <div class="ui divider"></div>
-    <table class="ui selectable table">
+    <table class="ui selectable inverted table">
         <thead>
             <tr>
                 <th>Symbol</th>
@@ -28,7 +28,7 @@
             {% for stock in stocks %}
             <tr>
                 <td>{{ stock.symbol }}</td>
-                <td><a href="/stock/{{  stock.symbol  }}">{{ stock.name }}</a></td>
+                <td><a style="color: white;" href="/stock/{{  stock.symbol  }}">{{ stock.name }}</a></td>
                 <td>{{ stock.recent_price }}</td>
             </tr>
             {% endfor %}
