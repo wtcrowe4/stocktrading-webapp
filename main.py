@@ -88,49 +88,49 @@ async def root(request: Request, page: str = '1', searchInput: str = None) -> Pa
 
 
 # Pagination
-@app.get("/{<int:page>}", response_model=Page[StockData])
-async def root(request: Request, page: int, searchInput: str = None) -> Page[StockData]:
-    page = int(page)
-    offset = (page - 1) * 50
+# @app.get("/{<int:page>}", response_model=Page[StockData])
+# async def root(request: Request, page: int, searchInput: str = None) -> Page[StockData]:
+#     page = int(page)
+#     offset = (page - 1) * 50
    
 
     
 
-    conn = sqlite3.connect(db_url)
-    conn.row_factory = sqlite3.Row  
-    cursor = conn.cursor()
+#     conn = sqlite3.connect(db_url)
+#     conn.row_factory = sqlite3.Row  
+#     cursor = conn.cursor()
     
-    searchInput = request.query_params.get('search')
-    if searchInput:
+#     searchInput = request.query_params.get('search')
+#     if searchInput:
         
-        cursor.execute("SELECT * FROM stock WHERE symbol LIKE ? ORDER BY symbol LIMIT 50", (f'%{searchInput}%',))
+#         cursor.execute("SELECT * FROM stock WHERE symbol LIKE ? ORDER BY symbol LIMIT 50", (f'%{searchInput}%',))
     
     
-    cursor.execute("SELECT * FROM stock ORDER BY symbol LIMIT 50 OFFSET ?", (offset,))
-    rows = cursor.fetchall()
+#     cursor.execute("SELECT * FROM stock ORDER BY symbol LIMIT 50 OFFSET ?", (offset,))
+#     rows = cursor.fetchall()
     
-    #Get the most recent closing price for each stock to display on home page
-    cursor.execute("""
-        SELECT stock_id, close
-        FROM stock_price
-        WHERE (stock_id, date) IN (
-            SELECT stock_id, MAX(date)
-            FROM stock_price
-            GROUP BY stock_id
-        )
-    """)
-    recent_prices = cursor.fetchall()
-    recent_prices_dict = {row['stock_id']: row['close'] for row in recent_prices}
-    stocks = []
-    for stock in rows:
-        stock_dict = dict(stock)
-        stock_dict['recent_price'] = recent_prices_dict.get(stock_dict['id'], None)
-        if stock_dict['recent_price'] is not None:
-            stock_dict['recent_price'] = round(stock_dict['recent_price'], 2)
-        stock = stock_dict
-        stocks.append(stock)
+#     #Get the most recent closing price for each stock to display on home page
+#     cursor.execute("""
+#         SELECT stock_id, close
+#         FROM stock_price
+#         WHERE (stock_id, date) IN (
+#             SELECT stock_id, MAX(date)
+#             FROM stock_price
+#             GROUP BY stock_id
+#         )
+#     """)
+#     recent_prices = cursor.fetchall()
+#     recent_prices_dict = {row['stock_id']: row['close'] for row in recent_prices}
+#     stocks = []
+#     for stock in rows:
+#         stock_dict = dict(stock)
+#         stock_dict['recent_price'] = recent_prices_dict.get(stock_dict['id'], None)
+#         if stock_dict['recent_price'] is not None:
+#             stock_dict['recent_price'] = round(stock_dict['recent_price'], 2)
+#         stock = stock_dict
+#         stocks.append(stock)
 
-    return templates.TemplateResponse("home.html", {"request": request, "stocks": stocks, "searchInput": searchInput})
+#     return templates.TemplateResponse("home.html", {"request": request, "stocks": stocks, "searchInput": searchInput})
 
 
 
