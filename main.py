@@ -44,6 +44,8 @@ async def root(request: Request, page: str = '1', searchInput: str = None) -> Pa
     else:
         page = int(page)
         offset = (page - 1) * 50
+
+    
     
    
 
@@ -83,7 +85,9 @@ async def root(request: Request, page: str = '1', searchInput: str = None) -> Pa
         stock = stock_dict
         stocks.append(stock)
 
-    return templates.TemplateResponse("home.html", {"request": request, "stocks": stocks, "searchInput": searchInput})
+    pages = cursor.execute("SELECT COUNT(*) FROM stock").fetchone()[0] // 50
+
+    return templates.TemplateResponse("home.html", {"request": request, "stocks": stocks, "searchInput": searchInput, "pages": pages})
     #return paginate(templates.TemplateResponse("home.html", {"request": request, "stocks": stocks, "searchInput": searchInput}))
 
 

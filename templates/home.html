@@ -37,15 +37,17 @@
     
     <div class="ui divider"></div> 
     
-    <div class="ui pagination menu">
+    <div class="ui fluid pagination menu">
         <a class="icon item left attached" href="/?page={{ prev_page }}"> 
             <i class="left chevron icon"></i>
         </a>
-        <a class="item" href="/?page=1">1</a>
-        <a class="item" href="/?page=2">2</a>
-        <a class="item" href="/?page=3">3</a>
-        <a class="item" href="/?page=4">4</a>
-        <a class="item" href="/?page=5">5</a>
+
+        <div style="overflow-x: auto; white-space: nowrap; display: flex; flex-direction: row;">
+            {% for page_num in range(1, pages) %}
+                <a class="item" href="/?page={{ page_num }}">{{ page_num }}</a>
+            {% endfor %}
+        </div>
+
         <a class="icon item right attached" href="/?page={{ next_page }}">
             <i class="right chevron icon"></i>
         </a>
