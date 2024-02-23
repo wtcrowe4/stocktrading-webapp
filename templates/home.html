@@ -37,11 +37,15 @@
     <div class="ui divider"></div> 
     
     <div class="ui pagination menu">
-        <a class="icon item left attached" href="/?page"> 
+        <a class="icon item left attached" href="/?page={{ prev_page }}"> 
             <i class="left chevron icon"></i>
         </a>
-
-        <a class="icon item right attached" href="/?page">
+        <a class="item" href="/?page=1">1</a>
+        <a class="item" href="/?page=2">2</a>
+        <a class="item" href="/?page=3">3</a>
+        <a class="item" href="/?page=4">4</a>
+        <a class="item" href="/?page=5">5</a>
+        <a class="icon item right attached" href="/?page={{ next_page }}">
             <i class="right chevron icon"></i>
         </a>
     </div>
