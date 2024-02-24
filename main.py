@@ -122,11 +122,12 @@ async def stock_data(request: Request, symbol):
     cursor.execute("SELECT * FROM stock WHERE symbol=?", (symbol,))
     row = cursor.fetchone()
     print(row['id'])
-    cursor.execute("SELECT * FROM stock_price WHERE stock_id=?", (row['id'],))
+    cursor.execute("SELECT * FROM stock_price WHERE stock_id=? ORDER BY date DESC", (row['id'],))
     prices = cursor.fetchall()
     
     #recently visited stocks
-    user_recent_stocks.insert(0, row['id'])
+    if row['id'] not in user_recent_stocks:
+        user_recent_stocks.insert(0, row['id'])
     if len(user_recent_stocks) > 20:
         user_recent_stocks.pop()
     print(user_recent_stocks)
