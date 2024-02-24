@@ -113,7 +113,7 @@ async def root(request: Request, page: str = '1', searchInput: str = None):  # -
 # If visited, add this stock to a list of recently visited stocks
 # If the stock is already in the list, move it to the top
 # If the list is longer than 20, remove the oldest stock
-user_recent_stocks = []
+user_recent_stocks = [377, 5007, 5553, 6562, 6380, 105, 9312]
 @app.get("/stock/{symbol}")
 async def stock_data(request: Request, symbol):
     conn = sqlite3.connect(db_url)
@@ -128,7 +128,7 @@ async def stock_data(request: Request, symbol):
     #recently visited stocks
     if row['id'] not in user_recent_stocks:
         user_recent_stocks.insert(0, row['id'])
-    if len(user_recent_stocks) > 20:
+    if len(user_recent_stocks) > 40:
         user_recent_stocks.pop()
     print(user_recent_stocks)
 
@@ -154,26 +154,36 @@ async def popular_stocks(request: Request):
 
 #Page for Recent Stocks
 @app.get("/recent")
-async def recent_stocks(request: Request):
+async def recent_stocks(request: Request, user_recent_stocks=user_recent_stocks):
     #for user recent stocks array get the stock information and the latest stock prices
+    print(user_recent_stocks)
     user_recent_stocks = list(dict.fromkeys(user_recent_stocks))    
     print(user_recent_stocks)
     conn = sqlite3.connect(db_url)
     conn.row_factory = sqlite3.Row
     cursor = conn.cursor()
     stocks=[]
+    # for stock_id in user_recent_stocks:
+    #     cursor.execute("SELECT * FROM stock WHERE id=?", (stock_id,))
+    #     row = cursor.fetchone()
+    #     stocks.append(row)
     for stock_id in user_recent_stocks:
         cursor.execute("SELECT * FROM stock WHERE id=?", (stock_id,))
-        row = cursor.fetchone()
-        stocks.append(row)
-    recent_prices = []
-    for stock_id in user_recent_stocks:
+        stock = cursor.fetchone()
+        stock_dict = dict(stock)
         cursor.execute("SELECT * FROM stock_price WHERE stock_id=? ORDER BY date DESC LIMIT 1", (stock_id,))
-        row = cursor.fetchone()
-        recent_prices.append(row)
+        price = cursor.fetchone()
+        if price is not None:
+            stock_dict['close'] = price['close']
+            stock_dict['date'] = price['date']
+            stock_dict['volume'] = price['volume']
+            stock_dict['high'] = price['high']
+            stock_dict['low'] = price['low']
+
+        stocks.append(stock_dict)
 
     
-    return templates.TemplateResponse("recent.html", {"request": request, "stocks": stocks, "prices": recent_prices})
+    return templates.TemplateResponse("recent.html", {"request": request, "stocks": stocks})
 
 
 #Page for Intraday Highs
