@@ -2,12 +2,12 @@ from typing import List
 from fastapi import FastAPI, Request
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
-from fastapi_pagination import Page, add_pagination, paginate
+# from fastapi_pagination import Page, add_pagination, paginate
 import sqlite3
 import os
 import dotenv
-from models.Stock import Stock
-from models.Stock_Price import Stock_Price
+# from models.Stock import Stock
+# from models.Stock_Price import Stock_Price
 
 dotenv.load_dotenv()
 
@@ -16,18 +16,18 @@ db_url = os.getenv('DATABASE_URL')
 app = FastAPI()
 app.mount("/assets", StaticFiles(directory="assets"), name="assets")
 templates = Jinja2Templates(directory="templates")
-add_pagination(app)
+#add_pagination(app)
 
 
 # Stock data class with stock and stock price data
-class StockData:
-    def __init__(self, stock: Stock, stock_price: List[Stock_Price]):
-        self.stock = stock
-        self.stock_price = stock_price
+# class StockData:
+#     def __init__(self, stock: Stock, stock_price: List[Stock_Price]):
+#         self.stock = stock
+#         self.stock_price = stock_price
 
 # Home page
-@app.get("/", response_model=Page[StockData])
-async def root(request: Request, page: str = '1', searchInput: str = None) -> Page[StockData]:
+@app.get("/")   #, response_model=Page[StockData]
+async def root(request: Request, page: str = '1', searchInput: str = None):  # -> Page[StockData]
     
     # Pagination
     if page == 'prev_page':
