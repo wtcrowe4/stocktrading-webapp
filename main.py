@@ -111,9 +111,8 @@ async def root(request: Request, page: str = '1', searchInput: str = None):  # -
     
 #Page for individual stock data
 # If visited, add this stock to a list of recently visited stocks
-# If the stock is already in the list, move it to the top
-# If the list is longer than 20, remove the oldest stock
 user_recent_stocks = [377, 5007, 5553, 6562, 6380, 105, 9312]
+
 @app.get("/stock/{symbol}")
 async def stock_data(request: Request, symbol):
     conn = sqlite3.connect(db_url)
@@ -181,9 +180,11 @@ async def recent_stocks(request: Request, user_recent_stocks=user_recent_stocks)
             stock_dict['low'] = price['low']
 
         stocks.append(stock_dict)
-
     
-    return templates.TemplateResponse("recent.html", {"request": request, "stocks": stocks})
+    user_recent_symbols = [stock['symbol'] for stock in stocks]
+    print(user_recent_symbols)
+    
+    return templates.TemplateResponse("recent.html", {"request": request, "stocks": stocks, "recent_symbols": user_recent_symbols})
 
 
 #Page for Intraday Highs
