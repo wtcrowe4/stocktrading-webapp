@@ -25,14 +25,17 @@
                 "withdateranges": true,
                 "allow_symbol_change": true,
                 "save_image": false,
-                "watchlist": [
-                    "AAPL",
-                    "IBM",
-                    "TSLA",
-                    "AMD",
-                    "MSFT",
-                    "GOOG"]
+                "watchlist": recent_symbols,
+                
             }
+
+            // "watchlist": [
+            //         "AAPL",
+            //         "IBM",
+            //         "TSLA",
+            //         "AMD",
+            //         "MSFT",
+            //         "GOOG"]
             </script>
             </div>
         <!-- TradingView Widget END -->
@@ -40,7 +43,9 @@
 
     <!--open ui container from index file-->
     <div class="ui container">
-
+    {% for symbol in recent_symbols %}
+        <a href="/stock/{{ symbol }}" class="ui label">{{ symbol }}</a>
+    {% endfor %}
     <table class="ui selectable inverted table">
         <thead>
             <tr>

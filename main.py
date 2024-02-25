@@ -112,7 +112,7 @@ async def root(request: Request, page: str = '1', searchInput: str = None):  # -
 #Page for individual stock data
 # If visited, add this stock to a list of recently visited stocks
 user_recent_stocks = [377, 5007, 5553, 6562, 6380, 105, 9312]
-
+user_favorite_stocks = [377, 5007, 5553, 6562, 6380, 105, 9312]
 @app.get("/stock/{symbol}")
 async def stock_data(request: Request, symbol):
     conn = sqlite3.connect(db_url)
@@ -130,6 +130,12 @@ async def stock_data(request: Request, symbol):
     if len(user_recent_stocks) > 40:
         user_recent_stocks.pop()
     print(user_recent_stocks)
+
+    #favorite stocks
+    def add_favorite_stock(stock_id):
+        if stock_id not in user_favorite_stocks:
+            user_favorite_stocks.append(stock_id)
+            print(user_favorite_stocks)
 
     return templates.TemplateResponse("stock_data.html", {"request": request, "prices": prices, "stock": row})
 
@@ -155,7 +161,6 @@ async def popular_stocks(request: Request):
 @app.get("/recent")
 async def recent_stocks(request: Request, user_recent_stocks=user_recent_stocks):
     #for user recent stocks array get the stock information and the latest stock prices
-    print(user_recent_stocks)
     user_recent_stocks = list(dict.fromkeys(user_recent_stocks))    
     print(user_recent_stocks)
     conn = sqlite3.connect(db_url)
