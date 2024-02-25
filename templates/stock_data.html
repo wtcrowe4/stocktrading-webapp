@@ -2,10 +2,10 @@
 <!-- eslint disable -->
 {% extends "index.html" %}
 {% block content %}
-    <div class="ui header">
+    
     <h1 class="ui huge header center aligned" style="color: white;">{{ stock.name }}</h1>
-    <button class="ui button float right" onclick=add_favorite_stock(stock.id)>Add to Favorites</button>
-    </div>
+    <button class="ui white button float right" onclick=add_favorite_stock(stock.id)>Add to Favorites</button>
+
     <div class="ui divider"></div>
     <h2 class="ui header center aligned" style="color: white;">Recent Stock Data</h2>
     <div class="ui divider"></div>

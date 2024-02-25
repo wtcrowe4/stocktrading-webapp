@@ -1,7 +1,7 @@
 {% extends "index.html" %}
 {% block content %}
     
-    <h1 class="ui white center aligned header">Recent Stocks</h1>
+    <h1 class="ui white center aligned header">Favorite Stocks</h1>
     <div class="ui divider"></div>
 
     <!--close ui container-->
@@ -25,9 +25,18 @@
                 "withdateranges": true,
                 "allow_symbol_change": true,
                 "save_image": false,
-                "watchlist": recent_symbols,
-                
+                "watchlist": [
+                    "INTC", 
+                    "MSFT", 
+                    "NVDA", 
+                    "PLTR", 
+                ]
             }
+            </script>
+             <!-- <script type="text/javascript"> -->
+            <!-- //         var favoriteSymbols = JSON.parse('{{ favorite_symbols | tojson | safe }}');
+            //     
+            //     "watchlist": favoriteSymbols,
 
             // "watchlist": [
             //         "AAPL",
@@ -35,8 +44,8 @@
             //         "TSLA",
             //         "AMD",
             //         "MSFT",
-            //         "GOOG"]
-            </script>
+            //         "GOOG"] -->
+            
             </div>
         <!-- TradingView Widget END -->
         </div>

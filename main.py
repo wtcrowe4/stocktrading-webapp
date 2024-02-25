@@ -111,8 +111,8 @@ async def root(request: Request, page: str = '1', searchInput: str = None):  # -
     
 #Page for individual stock data
 # If visited, add this stock to a list of recently visited stocks
-user_recent_stocks = [377, 5007, 5553, 6562, 6380, 105, 9312]
-user_favorite_stocks = [377, 5007, 5553, 6562, 6380, 105, 9312]
+user_recent_stocks = [377, 5007, 5553, 6380, 105, 9312]
+user_favorite_stocks = [377, 5007, 5553, 6380, 105, 9312] #6562,Berkshire Hathaway
 @app.get("/stock/{symbol}")
 async def stock_data(request: Request, symbol):
     conn = sqlite3.connect(db_url)
@@ -190,6 +190,37 @@ async def recent_stocks(request: Request, user_recent_stocks=user_recent_stocks)
     print(user_recent_symbols)
     
     return templates.TemplateResponse("recent.html", {"request": request, "stocks": stocks, "recent_symbols": user_recent_symbols})
+
+
+#Page for Favorite Stocks
+@app.get("/favorites")
+async def favorite_stocks(request: Request, user_favorite_stocks=user_favorite_stocks):
+    #for user favorite stocks array get the stock information and the latest stock prices
+    user_favorite_stocks = list(dict.fromkeys(user_favorite_stocks))
+    print(user_favorite_stocks)
+    conn = sqlite3.connect(db_url)
+    conn.row_factory = sqlite3.Row
+    cursor = conn.cursor()
+    stocks=[]
+    for stock_id in user_favorite_stocks:
+        cursor.execute("SELECT * FROM stock WHERE id=?", (stock_id,))
+        stock = cursor.fetchone()
+        stock_dict = dict(stock)
+        cursor.execute("SELECT * FROM stock_price WHERE stock_id=? ORDER BY date DESC LIMIT 1", (stock_id,))
+        price = cursor.fetchone()
+        if price is not None:
+            stock_dict['close'] = price['close']
+            stock_dict['date'] = price['date']
+            stock_dict['volume'] = price['volume']
+            stock_dict['high'] = price['high']
+            stock_dict['low'] = price['low']
+
+        stocks.append(stock_dict)
+    
+    user_favorite_symbols = [stock['symbol'] for stock in stocks]
+    print(user_favorite_symbols)
+    
+    return templates.TemplateResponse("favorites.html", {"request": request, "stocks": stocks, "favorite_symbols": user_favorite_symbols})
 
 
 #Page for Intraday Highs
