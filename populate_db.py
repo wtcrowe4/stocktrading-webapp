@@ -52,29 +52,29 @@ for asset in assets:
 #print(bars_df)
 
 #chunking and getting all daily data for last week
-chunk_size = 500
+chunk_size = 200
 start_date = '2024-01-01'
-end_date = '2024-02-15'
+end_date = '2024-02-23'
 
 
 for i in range(0, len(symbols), chunk_size):
     symbol_chunk = symbols[i:i+chunk_size]
     try:
-        # print('processing symbols', symbol_chunk)
         #remove '/' from symbol for api call
         symbol_chunk = [symbol.replace('/', '') if '/' in symbol else symbol for symbol in symbol_chunk]
         print('processing symbols', symbol_chunk)
         barsets = api.get_bars(symbol_chunk, TimeFrame.Day, start=start_date, end=end_date)
         #print(barsets)
         for bar in barsets:
-            print(f'Processing symbol {bar.S} for date {bar.t.date()}')
+            #print(f'Processing symbol {bar.S} for date {bar.t.date()}')
             cursor.execute('SELECT id FROM stock WHERE symbol=?', (bar.S,))
             stock_id = cursor.fetchone()[0]
             timestamp_str = bar.t.strftime('%H:%M:%S')
             cursor.execute('SELECT id FROM stock_price WHERE stock_id=? AND date=? AND timestamp=?', (stock_id, bar.t.date(), timestamp_str))
             stock_price_id = cursor.fetchone()
             if stock_price_id:
-                print('Stock price already exists')
+                #print('Stock price already exists')
+                pass
             else:
                 cursor.execute('INSERT INTO stock_price (stock_id, date, timestamp, open, high, low, close, volume) VALUES (?, ?, ?, ?, ?, ?, ?, ?)', 
                 (stock_id, bar.t.date(), timestamp_str, bar.o, bar.h, bar.l, bar.c, bar.v))
