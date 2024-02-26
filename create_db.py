@@ -56,4 +56,11 @@ cursor.execute('''
     )
 ''')
 
+strategies = [
+    ('opening_range_breakout', 'Opening range breakout .'),
+    ('opening_range_breakdown', 'Opening range breakdown .')
+]
+cursor.executemany('INSERT INTO strategy (name, description) VALUES (?, ?)', strategies)
+
+
 conn.commit()
