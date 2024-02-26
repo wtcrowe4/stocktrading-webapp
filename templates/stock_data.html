@@ -5,9 +5,24 @@
     
     <h1 class="ui huge header center aligned" style="color: white;font-size: 4rem;">{{ stock.name }}</h1>
     
-    <div class"ui container flex">
+    <div class="ui container flex">
         <button class="ui white button left floated" onclick=add_favorite_stock(stock.id)>Add to Favorites</button>
-        <button class="ui white button right floated">Add to Strategy</button>
+        <form class="ui item right floated" method="post" action="/add_to_strategy/{{ stock.id }}">
+            <select class="ui dropdown" name="strategy" title="strategy" default="Add to Strategy">
+                {% for strategy in strategies %}
+                    <option class="item" value="{{ strategy.id }}">{{ strategy.name }}</option>
+                {% endfor %}
+            </select>   
+                <!-- <option value="sma_crossover">SMA Crossover</option>
+                <option value="rsi_divergence">RSI Divergence</option>
+                <option value="macd_crossover">MACD Crossover</option>
+                <option value="opening_range_breakout">Opening Range Breakout</option>
+                <option value="opening_range_breakdown">Opening Range Breakdown</option> -->
+            <input class="ui white button right floated" type="submit" value="Add to Strategy"/>
+        </form>
+        
+        
+        
     </div>   
     
     <div class="ui divider"></div>

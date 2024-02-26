@@ -104,7 +104,10 @@ async def root(request: Request, page: str = '1', searchInput: str = None):  # -
 
     pages = cursor.execute("SELECT COUNT(*) FROM stock").fetchone()[0] // 50
 
-    return templates.TemplateResponse("home.html", {"request": request, "stocks": stocks, "searchInput": searchInput, "pages": pages})
+    return templates.TemplateResponse("home.html", {"request": request, 
+                                                    "stocks": stocks, 
+                                                    "searchInput": searchInput, 
+                                                    "pages": pages})
     #return paginate(templates.TemplateResponse("home.html", {"request": request, "stocks": stocks, "searchInput": searchInput}))
 
 
@@ -137,7 +140,15 @@ async def stock_data(request: Request, symbol):
             user_favorite_stocks.append(stock_id)
             print(user_favorite_stocks)
 
-    return templates.TemplateResponse("stock_data.html", {"request": request, "prices": prices, "stock": row})
+    #strategies
+    cursor.execute("SELECT * FROM strategy")
+    strategies = cursor.fetchall()
+
+    return templates.TemplateResponse("stock_data.html", {"request": request, 
+                                                          "prices": prices, 
+                                                          "stock": row, 
+                                                          "strategies": strategies, 
+                                                          "add_favorite_stock": add_favorite_stock })
 
     
 #Page for Popular Stocks
