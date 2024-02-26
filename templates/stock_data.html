@@ -3,9 +3,13 @@
 {% extends "index.html" %}
 {% block content %}
     
-    <h1 class="ui huge header center aligned" style="color: white;">{{ stock.name }}</h1>
-    <button class="ui white button float right" onclick=add_favorite_stock(stock.id)>Add to Favorites</button>
-
+    <h1 class="ui huge header center aligned" style="color: white;font-size: 4rem;">{{ stock.name }}</h1>
+    
+    <div class"ui container flex">
+        <button class="ui white button left floated" onclick=add_favorite_stock(stock.id)>Add to Favorites</button>
+        <button class="ui white button right floated">Add to Strategy</button>
+    </div>   
+    
     <div class="ui divider"></div>
     <h2 class="ui header center aligned" style="color: white;">Recent Stock Data</h2>
     <div class="ui divider"></div>
@@ -42,7 +46,7 @@
     <div class="ui container">
 
     <div class="ui divider"></div>
-    <h2 class="ui header center aligned">Historical Stock Data</h2>
+    <h2 class="ui header center aligned" style="color: white;">Historical Stock Data</h2>
 
     <table class="ui selectable inverted table">
         <thead>

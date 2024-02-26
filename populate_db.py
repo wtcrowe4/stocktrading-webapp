@@ -53,7 +53,7 @@ for asset in assets:
 
 #chunking and getting all daily data for last week
 chunk_size = 200
-start_date = '2024-01-01'
+start_date = '2024-02-16'
 end_date = '2024-02-23'
 
 
