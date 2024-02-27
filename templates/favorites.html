@@ -25,12 +25,7 @@
                 "withdateranges": true,
                 "allow_symbol_change": true,
                 "save_image": false,
-                "watchlist": [
-                    "INTC", 
-                    "MSFT", 
-                    "NVDA", 
-                    "PLTR", 
-                ]
+                "watchlist": [{{ favorite_symbols }}]
             }
             </script>
              <!-- <script type="text/javascript"> -->
@@ -50,8 +45,15 @@
         <!-- TradingView Widget END -->
         </div>
 
-    <!--open ui container from index file-->
-    <div class="ui container">
+        <div class="ui divider"></div>
+        <!--open ui container from index file-->
+        <div class="ui container">
+        
+        {% for symbol in favorite_symbols %}
+            <a href="/stock/{{ symbol }}" class="ui label">{{ symbol }}</a>
+        {% endfor %}
+
+    
     {% for symbol in recent_symbols %}
         <a href="/stock/{{ symbol }}" class="ui label">{{ symbol }}</a>
     {% endfor %}
