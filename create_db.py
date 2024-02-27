@@ -42,7 +42,8 @@ cursor.execute('''
     CREATE TABLE IF NOT EXISTS strategy (
         id INTEGER PRIMARY KEY,
         name TEXT NOT NULL,
-        description TEXT
+        description TEXT,
+        viewable_name TEXT
     )
 ''')
 
@@ -56,11 +57,15 @@ cursor.execute('''
     )
 ''')
 
+
+
 strategies = [
-    ('opening_range_breakout', 'Opening range breakout .'),
-    ('opening_range_breakdown', 'Opening range breakdown .')
+    ('opening_range_breakout', 'Opening range breakout.', 'Opening Range Breakout'),
+    ('opening_range_breakdown', 'Opening range breakdown.', 'Opening Range Breakdown'),
 ]
-cursor.executemany('INSERT INTO strategy (name, description) VALUES (?, ?)', strategies)
+cursor.executemany('INSERT INTO strategy (name, description, viewable_name) VALUES (?, ?, ?)', strategies)
+
+
 
 
 conn.commit()
