@@ -6,6 +6,7 @@ from fastapi.staticfiles import StaticFiles
 import sqlite3
 import os
 import dotenv
+from fastapi import APIRouter
 # from models.Stock import Stock
 # from models.Stock_Price import Stock_Price
 
@@ -134,12 +135,6 @@ async def stock_data(request: Request, symbol):
         user_recent_stocks.pop()
     print(user_recent_stocks)
 
-    #favorite stocks
-    def add_favorite_stock(stock_id):
-        if stock_id not in user_favorite_stocks:
-            user_favorite_stocks.append(stock_id)
-            print(user_favorite_stocks)
-
     #strategies
     cursor.execute("SELECT * FROM strategy")
     strategies = cursor.fetchall()
@@ -147,8 +142,20 @@ async def stock_data(request: Request, symbol):
     return templates.TemplateResponse("stock_data.html", {"request": request, 
                                                           "prices": prices, 
                                                           "stock": row, 
-                                                          "strategies": strategies, 
-                                                          "add_favorite_stock": add_favorite_stock })
+                                                          "strategies": strategies})
+
+
+# Router for favorite stocks
+router = APIRouter()
+
+@router.post("/add_favorite/{stock_id}")
+async def add_favorite_stock(stock_id: int):
+    if stock_id not in user_favorite_stocks:
+        user_favorite_stocks.append(stock_id)
+    return {"message": "Stock added to favorites", "favorite_stocks": user_favorite_stocks}
+
+app.include_router(router)
+
 
     
 #Page for Popular Stocks

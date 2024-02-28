@@ -6,23 +6,18 @@
     <h1 class="ui huge header center aligned" style="color: white;font-size: 4rem;">{{ stock.name }}</h1>
     
     <div class="ui container flex">
-        <button class="ui white button left floated" onclick=add_favorite_stock(stock.id)>Add to Favorites</button>
+        <!-- <button class="ui white button left floated" onclick=add_favorite_stock(stock.id)>Add to Favorites</button> -->
+        <from class="ui left floated header" method="post" action="/add_favorite/{{ stock.id }}">
+            <input class="ui white button left floated" type="submit" value="Add to Favorites"/>
+        </form>
         <form class="ui right floated header" method="post" action="/add_to_strategy/{{ stock.id }}">
             <select class="ui dropdown" name="strategy" title="strategy" default="Add to Strategy">
                 {% for strategy in strategies %}
                     <option class="item" value="{{ strategy.id }}">{{ strategy.viewable_name }}</option>
                 {% endfor %}
             </select>   
-                <!-- <option value="sma_crossover">SMA Crossover</option>
-                <option value="rsi_divergence">RSI Divergence</option>
-                <option value="macd_crossover">MACD Crossover</option>
-                <option value="opening_range_breakout">Opening Range Breakout</option>
-                <option value="opening_range_breakdown">Opening Range Breakdown</option> -->
             <input class="ui white button right floated" type="submit" value="Add to Strategy"/>
         </form>
-        
-        
-        
     </div>   
     
     <div class="ui divider"></div>
@@ -31,35 +26,6 @@
     
     </div> <!-- Closing the UI container from the index file -->
         <div style="display: flex; flex-direction: column; justify-content: center; align-items: center; height: 50vh; width: 80vw; margin: auto;">
-            
-            <!-- TradingView Widget BEGIN -->
-            <!-- <div class="tradingview-widget-container" style="height:100%;width:100%">
-                <div class="tradingview-widget-container__widget" style="height:calc(100% - 32px);width:100%"></div>
-                <div class="tradingview-widget-copyright"><a href="https://www.tradingview.com/" rel="noopener nofollow" target="_blank"><span class="blue-text">Track all markets on TradingView</span></a></div>
-                <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js" async>
-                {
-                "container_id": "analytics-platform-chart-demo",
-                "width": "100%",
-                "height": "100%",
-                "autosize": true,
-                "symbol": "{{stock.exchange}}:{{stock.symbol}}",
-                "interval": "D",
-                "timezone": "exchange",
-                "theme": "dark",
-                "style": "0",
-                "withdateranges": true,
-                "allow_symbol_change": true,
-                "save_image": false,
-                "details": true,
-                "hotlist": true,
-                "calendar": true,
-                "studies": [
-                    "STD;Bollinger_Bands",
-                    ""]
-            }
-                </script>
-            </div> -->
-            <!-- TradingView Widget END -->
             
             <!-- TradingView Technical Analysis Widget BEGIN -->
             <div class="tradingview-widget-container" style="height:100%;width:100%">
@@ -93,34 +59,7 @@
                     }
                 </script>
             </div>
-            <!-- TradingView Widget END -->
-            
-            
-            
-            <!-- TradingView Widget BEGIN -->
-            <!-- <div class="tradingview-widget-container">
-                <div class="tradingview-widget-container__widget"></div>
-                    <div class="tradingview-widget-copyright"><a href="https://www.tradingview.com/" rel="noopener nofollow" target="_blank"><span class="blue-text">Track all markets on TradingView</span></a></div>
-                            <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js" async>
-                            {
-                                "width": "100%",
-                                "height": "100%",
-                                "symbol": "{{stock.exchange}}:{{stock.symbol}}",
-                                "interval": "30",
-                                "timezone": "Etc/UTC",
-                                "theme": "dark",
-                                "style": "1",
-                                "locale": "en",
-                                "enable_publishing": false,
-                                "allow_symbol_change": true,
-                                "studies": [
-                                "STD;Bollinger_Bands"
-                                ],
-                                "support_host": "https://www.tradingview.com"
-                            }
-                            </script>
-            </div> -->
-            <!-- TradingView Widget END -->
+            <!-- TradingView Technical Analysis Widget END -->
         </div>
     
         <!-- Open UI container from index file -->
