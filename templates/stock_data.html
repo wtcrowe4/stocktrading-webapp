@@ -6,10 +6,16 @@
     <h1 class="ui huge header center aligned" style="color: white;font-size: 4rem;">{{ stock.name }}</h1>
     
     <div class="ui container flex">
-        <!-- <button class="ui white button left floated" onclick=add_favorite_stock(stock.id)>Add to Favorites</button> -->
+        {% if stock.id in favorite_stocks %}
+            <form class="ui left floated header" method="post" action="/remove_favorite/{{ stock.id }}">
+                <input class="ui white button left floated" type="submit" value="Remove from Favorites"/>
+            </form>
+        {% else %}
         <from class="ui left floated header" method="post" action="/add_favorite/{{ stock.id }}">
             <input class="ui white button left floated" type="submit" value="Add to Favorites"/>
         </form>
+        {% endif %}
+        
         <form class="ui right floated header" method="post" action="/add_to_strategy/{{ stock.id }}">
             <select class="ui dropdown" name="strategy" title="strategy" default="Add to Strategy">
                 {% for strategy in strategies %}

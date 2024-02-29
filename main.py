@@ -135,26 +135,32 @@ async def stock_data(request: Request, symbol):
         user_recent_stocks.pop()
     print(user_recent_stocks)
 
+    #favorite stocks
+    
+
     #strategies
     cursor.execute("SELECT * FROM strategy")
     strategies = cursor.fetchall()
 
     return templates.TemplateResponse("stock_data.html", {"request": request, 
                                                           "prices": prices, 
-                                                          "stock": row, 
+                                                          "stock": row,
+                                                          "favorite_stocks": user_favorite_stocks,
                                                           "strategies": strategies})
 
 
-# Router for favorite stocks
-router = APIRouter()
-
-@router.post("/add_favorite/{stock_id}")
+# Route for favorite stocks
+@app.post("/add_favorite/{stock_id}")
 async def add_favorite_stock(stock_id: int):
     if stock_id not in user_favorite_stocks:
         user_favorite_stocks.append(stock_id)
     return {"message": "Stock added to favorites", "favorite_stocks": user_favorite_stocks}
 
-app.include_router(router)
+@app.post("/remove_favorite/{stock_id}")
+async def remove_favorite_stock(stock_id: int):
+    if stock_id in user_favorite_stocks:
+        user_favorite_stocks.remove(stock_id)
+    return {"message": "Stock removed from favorites", "favorite_stocks": user_favorite_stocks}
 
 
     
