@@ -1,5 +1,5 @@
 from typing import List
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request, Form
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 # from fastapi_pagination import Page, add_pagination, paginate
@@ -7,6 +7,7 @@ import sqlite3
 import os
 import dotenv
 from fastapi import APIRouter
+from fastapi.responses import RedirectResponse
 # from models.Stock import Stock
 # from models.Stock_Price import Stock_Price
 
@@ -156,16 +157,21 @@ async def add_favorite_stock(stock_id: int):
     global user_favorite_stocks
     if stock_id not in user_favorite_stocks:
         user_favorite_stocks.append(stock_id)
-        print("Added to favorites:", stock_id, user_favorite_stocks)    
-    return {"message": "Stock added to favorites", "favorite_stocks": user_favorite_stocks}
+        print("Added to favorites:", stock_id, user_favorite_stocks)
+    stock_symbol = sqlite3.connect(db_url).cursor().execute("SELECT symbol FROM stock WHERE id=?", (stock_id,)).fetchone()[0]
+    #return {"message": "Stock added to favorites", "favorite_stocks": user_favorite_stocks}
+    return RedirectResponse(url=f"/stock/{stock_symbol}", status_code=303)
+        
 
 @app.post("/remove_favorite/{stock_id}")
 async def remove_favorite_stock(stock_id: int):
     global user_favorite_stocks
     if stock_id in user_favorite_stocks:
         user_favorite_stocks.remove(stock_id)
-    return {"message": "Stock removed from favorites", "favorite_stocks": user_favorite_stocks}
-
+        print("Removed from favorites:", stock_id, user_favorite_stocks)
+    stock_symbol = sqlite3.connect(db_url).cursor().execute("SELECT symbol FROM stock WHERE id=?", (stock_id,)).fetchone()[0]
+    #return {"message": "Stock removed from favorites", "favorite_stocks": user_favorite_stocks}
+    return RedirectResponse(url=f"/stock/{stock_symbol}", status_code=303)
 
     
 #Page for Popular Stocks

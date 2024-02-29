@@ -11,9 +11,9 @@
                 <input class="ui white button left floated" type="submit" value="Remove from Favorites"/>
             </form>
         {% else %}
-        <from class="ui left floated" method="post" action="/add_favorite/{{ stock.id }}">
-            <input class="ui white button left floated" type="submit" value="Add to Favorites"/>
-        </from>
+            <form class="ui left floated" method="post" action="/add_favorite/{{ stock.id }}">
+                <input class="ui white button left floated" type="submit" value="Add to Favorites"/>
+            </form>
         {% endif %}
         
         <form class="ui right floated" style="text-align:right;" method="post" action="/add_to_strategy/{{ stock.id }}">
