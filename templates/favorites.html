@@ -1,7 +1,7 @@
 {% extends "index.html" %}
 {% block content %}
     
-    <h1 class="ui white center aligned header">Favorite Stocks</h1>
+    <h1 class="ui center aligned huge header" style="color: white;">Favorite Stocks</h1>
     <div class="ui divider"></div>
 
     <!--close ui container-->
@@ -17,7 +17,7 @@
                 "width": "100%",
                 "height": "100%",
                 "autosize": true,
-                "symbol": "NASDAQ:AAPL",
+                "symbol": "{{stocks[0]['exchange']}}:{{stocks[0]['symbol']}}",
                 "interval": "D",
                 "timezone": "exchange",
                 "theme": "dark",
@@ -25,7 +25,7 @@
                 "withdateranges": true,
                 "allow_symbol_change": true,
                 "save_image": false,
-                "watchlist": [{{ favorite_symbols }}]
+                "watchlist":  {{ favorite_symbols | tojson | safe }}
             }
             </script>
              <!-- <script type="text/javascript"> -->

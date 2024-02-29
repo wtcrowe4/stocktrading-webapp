@@ -4,30 +4,38 @@
 {% block content %}
     
     <h1 class="ui huge header center aligned" style="color: white;font-size: 4rem;">{{ stock.name }}</h1>
-    
-    <div class="ui container flex">
+    <div class="ui divider"></div>
+    <div class="ui container flex padded text">
         {% if stock.id in favorite_stocks %}
-            <form class="ui left floated header" method="post" action="/remove_favorite/{{ stock.id }}">
+            <form class="ui left floated" method="post" action="/remove_favorite/{{ stock.id }}">
                 <input class="ui white button left floated" type="submit" value="Remove from Favorites"/>
             </form>
         {% else %}
-        <from class="ui left floated header" method="post" action="/add_favorite/{{ stock.id }}">
+        <from class="ui left floated" method="post" action="/add_favorite/{{ stock.id }}">
             <input class="ui white button left floated" type="submit" value="Add to Favorites"/>
-        </form>
+        </from>
         {% endif %}
         
-        <form class="ui right floated header" method="post" action="/add_to_strategy/{{ stock.id }}">
-            <select class="ui dropdown" name="strategy" title="strategy" default="Add to Strategy">
+        <form class="ui right floated" style="text-align:right;" method="post" action="/add_to_strategy/{{ stock.id }}">
+            <select class="ui right floated dropdown" name="strategy" title="strategy" default="Add to Strategy">
                 {% for strategy in strategies %}
                     <option class="item" value="{{ strategy.id }}">{{ strategy.viewable_name }}</option>
                 {% endfor %}
             </select>   
             <input class="ui white button right floated" type="submit" value="Add to Strategy"/>
         </form>
-    </div>   
+    </div>  
+    <div class="ui divider"></div> 
     
-    <div class="ui divider"></div>
-    <h2 class="ui header center aligned" style="color: white;">Recent Stock Data</h2>
+    <div class="ui container flex">
+        <div class="ui left floated header">
+            <h2 style="color: white;">{{ stock.symbol }}</h2>
+        </div>
+        <div class="ui right floated header">
+            <h2 style="color: white;">{{ stock.exchange }}</h2>
+    </div>
+    </div>
+    <h3 class="ui header center aligned" style="color: white;">Recent Stock Data</h3>
     <div class="ui divider"></div>
     
     </div> <!-- Closing the UI container from the index file -->

@@ -133,10 +133,10 @@ async def stock_data(request: Request, symbol):
         user_recent_stocks.insert(0, row['id'])
     if len(user_recent_stocks) > 40:
         user_recent_stocks.pop()
-    print(user_recent_stocks)
+    print("recent",user_recent_stocks)
 
     #favorite stocks
-    
+    print("favorites", user_favorite_stocks)
 
     #strategies
     cursor.execute("SELECT * FROM strategy")
@@ -145,19 +145,23 @@ async def stock_data(request: Request, symbol):
     return templates.TemplateResponse("stock_data.html", {"request": request, 
                                                           "prices": prices, 
                                                           "stock": row,
+                                                          "recent_stocks": user_recent_stocks,
                                                           "favorite_stocks": user_favorite_stocks,
                                                           "strategies": strategies})
 
 
-# Route for favorite stocks
+# Routes for favorite stocks
 @app.post("/add_favorite/{stock_id}")
 async def add_favorite_stock(stock_id: int):
+    global user_favorite_stocks
     if stock_id not in user_favorite_stocks:
         user_favorite_stocks.append(stock_id)
+        print("Added to favorites:", stock_id, user_favorite_stocks)    
     return {"message": "Stock added to favorites", "favorite_stocks": user_favorite_stocks}
 
 @app.post("/remove_favorite/{stock_id}")
 async def remove_favorite_stock(stock_id: int):
+    global user_favorite_stocks
     if stock_id in user_favorite_stocks:
         user_favorite_stocks.remove(stock_id)
     return {"message": "Stock removed from favorites", "favorite_stocks": user_favorite_stocks}
@@ -243,7 +247,7 @@ async def favorite_stocks(request: Request, user_favorite_stocks=user_favorite_s
     
     user_favorite_symbols = [stock['symbol'] for stock in stocks]
     print(user_favorite_symbols)
-    
+    print(stocks[0]['exchange'], stocks[0]['symbol'])
     return templates.TemplateResponse("favorites.html", {"request": request, "stocks": stocks, "favorite_symbols": user_favorite_symbols})
 
 

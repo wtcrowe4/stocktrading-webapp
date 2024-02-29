@@ -20,7 +20,7 @@
                     "width": "100%",
                     "height": "100%",
                     "autosize": true,
-                    "symbol": "NASDAQ:AAPL",
+                    "symbol": "{{stocks[0]['exchange']}}:{{stocks[0]['symbol']}}",
                     "interval": "D",
                     "timezone": "exchange",
                     "theme": "dark",
@@ -28,7 +28,7 @@
                     "withdateranges": true,
                     "allow_symbol_change": true,
                     "save_image": false,
-                    "watchlist": ["AAPL", "IBM", "TSLA", "AMD", "MSFT", "GOOG"]
+                    "watchlist": {{ recent_symbols | tojson | safe }}
                 }
                 </script>
             </div>
