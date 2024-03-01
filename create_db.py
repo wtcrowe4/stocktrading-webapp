@@ -57,13 +57,13 @@ cursor.execute('''
     )
 ''')
 
+# Add date for the stock_strategy table
 
-
-strategies = [
-    ('opening_range_breakout', 'Opening range breakout.', 'Opening Range Breakout'),
-    ('opening_range_breakdown', 'Opening range breakdown.', 'Opening Range Breakdown'),
-]
-cursor.executemany('INSERT INTO strategy (name, description, viewable_name) VALUES (?, ?, ?)', strategies)
+# strategies = [
+#     ('opening_range_breakout', 'Opening range breakout.', 'Opening Range Breakout'),
+#     ('opening_range_breakdown', 'Opening range breakdown.', 'Opening Range Breakdown'),
+# ]
+# cursor.executemany('INSERT INTO strategy (name, description, viewable_name) VALUES (?, ?, ?)', strategies)
 
 
 

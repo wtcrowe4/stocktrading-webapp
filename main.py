@@ -116,8 +116,8 @@ async def root(request: Request, page: str = '1', searchInput: str = None):  # -
     
 #Page for individual stock data
 # If visited, add this stock to a list of recently visited stocks
-user_recent_stocks = [377, 5007, 5553, 6380, 105, 9312]
-user_favorite_stocks = [377, 5007, 5553, 6380, 105, 9312] #6562,Berkshire Hathaway
+user_recent_stocks = [10966, 377, 5007, 5553, 6380, 105, 9312, 6562]
+user_favorite_stocks = [377, 5007, 5553, 6380, 9312] #6562,Berkshire Hathaway
 @app.get("/stock/{symbol}")
 async def stock_data(request: Request, symbol):
     conn = sqlite3.connect(db_url)
@@ -161,7 +161,6 @@ async def add_favorite_stock(stock_id: int):
     stock_symbol = sqlite3.connect(db_url).cursor().execute("SELECT symbol FROM stock WHERE id=?", (stock_id,)).fetchone()[0]
     #return {"message": "Stock added to favorites", "favorite_stocks": user_favorite_stocks}
     return RedirectResponse(url=f"/stock/{stock_symbol}", status_code=303)
-        
 
 @app.post("/remove_favorite/{stock_id}")
 async def remove_favorite_stock(stock_id: int):
@@ -173,7 +172,21 @@ async def remove_favorite_stock(stock_id: int):
     #return {"message": "Stock removed from favorites", "favorite_stocks": user_favorite_stocks}
     return RedirectResponse(url=f"/stock/{stock_symbol}", status_code=303)
 
+
+#Route for strategies
+@app.post("/add_strategy/{stock_id}")
+async def add_strategy(request: Request, stock_id: int, strategy: int = Form(...)):
+    conn = sqlite3.connect(db_url)
+    cursor = conn.cursor()
+    cursor.execute("INSERT INTO stock_strategy (stock_id, strategy_id) VALUES (?, ?)", (stock_id, strategy))
+    conn.commit()
+    stock_symbol = sqlite3.connect(db_url).cursor().execute("SELECT symbol FROM stock WHERE id=?", (stock_id,)).fetchone()[0]
+    print("Added strategy", strategy, "to stock", stock_id)
+    return RedirectResponse(url=f"/portfolio", status_code=303)
     
+
+
+
 #Page for Popular Stocks
 @app.get("/popular")
 async def popular_stocks(request: Request):
@@ -310,7 +323,7 @@ async def closing_highs(request: Request):
     return templates.TemplateResponse("closing.html", {"request": request, "stocks": rows})
 
 
-#Page for Closing Lows
+# Page for Closing Lows
 @app.get("/closing_lows")
 async def closing_lows(request: Request):
     conn = sqlite3.connect(db_url)
@@ -329,7 +342,29 @@ async def closing_lows(request: Request):
 
 
 
+# Page for Portfolio/currently active strategies
+@app.get("/portfolio")
+async def portfolio(request: Request):
+    conn = sqlite3.connect(db_url)
+    conn.row_factory = sqlite3.Row
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM stock_strategy")
+    active_strategies = cursor.fetchall()
+    portfolio_dict = {}
+    for strategy in active_strategies:
+        stock = cursor.execute("SELECT * FROM stock WHERE id=?", (strategy['stock_id'],)).fetchone()
+        portfolio_dict = dict(strategy)
+        portfolio_dict['stock'] = stock
+        portfolio_dict['stock_price'] = cursor.execute("SELECT * FROM stock_price WHERE stock_id=? ORDER BY date DESC LIMIT 1", (stock['id'],)).fetchone()
+        portfolio_dict['name'] = stock['name']
+        portfolio_dict['symbol'] = stock['symbol']
+        portfolio_dict['exchange'] = stock['exchange']
+        portfolio_dict['strategy'] = cursor.execute("SELECT * FROM strategy WHERE id=?", (strategy['strategy_id'],)).fetchone()
+        portfolio_dict['viewable_name'] = portfolio_dict['strategy']['viewable_name']
 
+
+
+    return templates.TemplateResponse("portfolio.html", {"request": request, "active_strategies": portfolio_dict})
 
 
 

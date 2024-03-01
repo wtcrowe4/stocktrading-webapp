@@ -16,7 +16,7 @@
             </form>
         {% endif %}
         
-        <form class="ui right floated" style="text-align:right;" method="post" action="/add_to_strategy/{{ stock.id }}">
+        <form class="ui right floated" style="text-align:right;" method="post" action="/add_strategy/{{ stock.id }}">
             <select class="ui right floated dropdown" name="strategy" title="strategy" default="Add to Strategy">
                 {% for strategy in strategies %}
                     <option class="item" value="{{ strategy.id }}">{{ strategy.viewable_name }}</option>

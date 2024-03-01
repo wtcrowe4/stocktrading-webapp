@@ -1,0 +1,33 @@
+{% extends "index.html" %}
+{% block content %}
+
+<h1 class="ui huge header center aligned" style="color: white;font-size: 4rem;">My Portfolio</h1>
+<div class="ui divider"></div>
+
+<table class="ui selectable inverted table">
+    <thead>
+        <tr>
+            <th>Symbol</th>
+            <th>Name</th>
+            <th>Exchange</th>
+            <th>Strategy</th>
+
+        </tr>
+    </thead>
+
+    <tbody>
+        {% for strategy in active_strategies %}
+            <tr>
+                <td>{{ strategy.symbol }}</td>
+                <td>{{ strategy.name }}</td>
+                <td>{{ strategy.exchange }}</td>
+                <td>{{ strategy.viewable_name }}</td>
+            </tr>
+        {% endfor %}
+    
+    </tbody>
+
+
+</table>
+    
+{% endblock %}
