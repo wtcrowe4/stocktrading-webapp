@@ -350,21 +350,27 @@ async def portfolio(request: Request):
     cursor = conn.cursor()
     cursor.execute("SELECT * FROM stock_strategy")
     active_strategies = cursor.fetchall()
-    portfolio_dict = {}
+    portfolio_list = []
     for strategy in active_strategies:
         stock = cursor.execute("SELECT * FROM stock WHERE id=?", (strategy['stock_id'],)).fetchone()
-        portfolio_dict = dict(strategy)
-        portfolio_dict['stock'] = stock
-        portfolio_dict['stock_price'] = cursor.execute("SELECT * FROM stock_price WHERE stock_id=? ORDER BY date DESC LIMIT 1", (stock['id'],)).fetchone()
-        portfolio_dict['name'] = stock['name']
-        portfolio_dict['symbol'] = stock['symbol']
-        portfolio_dict['exchange'] = stock['exchange']
-        portfolio_dict['strategy'] = cursor.execute("SELECT * FROM strategy WHERE id=?", (strategy['strategy_id'],)).fetchone()
-        portfolio_dict['viewable_name'] = portfolio_dict['strategy']['viewable_name']
+        stock_price = cursor.execute("SELECT * FROM stock_price WHERE stock_id=? ORDER BY date DESC LIMIT 1", (stock['id'],)).fetchone()
+        strategy_info = cursor.execute("SELECT * FROM strategy WHERE id=?", (strategy['strategy_id'],)).fetchone()
+
+        portfolio_dict = {
+            'stock': stock,
+            'stock_price': stock_price,
+            'name': stock['name'],
+            'symbol': stock['symbol'],
+            'exchange': stock['exchange'],
+            'strategy': strategy_info,
+            'viewable_name': strategy_info['viewable_name']
+        }
+        portfolio_list.append(portfolio_dict)
+
+    print(portfolio_list)
 
 
-
-    return templates.TemplateResponse("portfolio.html", {"request": request, "active_strategies": portfolio_dict})
+    return templates.TemplateResponse("portfolio.html", {"request": request, "active_strategies": portfolio_list })
 
 
 

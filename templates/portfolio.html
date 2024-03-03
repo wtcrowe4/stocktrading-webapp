@@ -18,10 +18,10 @@
     <tbody>
         {% for strategy in active_strategies %}
             <tr>
-                <td>{{ strategy.symbol }}</td>
-                <td>{{ strategy.name }}</td>
-                <td>{{ strategy.exchange }}</td>
-                <td>{{ strategy.viewable_name }}</td>
+                <td>{{ strategy['symbol'] }}</td>
+                <td>{{ strategy['name'] }}</td>
+                <td>{{ strategy['exchange'] }}</td>
+                <td>{{ strategy['viewable_name'] }}</td>
             </tr>
         {% endfor %}
     
