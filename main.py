@@ -312,15 +312,16 @@ async def closing_highs(request: Request):
     conn.row_factory = sqlite3.Row
     cursor = conn.cursor()
     cursor.execute("""
-        SELECT symbol, name, date, MAX(close) 
+        SELECT symbol, name, date, MAX(close) as close 
         FROM stock JOIN stock_price ON stock.id = stock_price.stock_id
         GROUP BY stock_id
-        ORDER BY close DESC
+        ORDER BY date DESC
         LIMIT 50
     """)
     rows = cursor.fetchall()
+    header_txt = "Closing Highs"
     
-    return templates.TemplateResponse("closing.html", {"request": request, "stocks": rows})
+    return templates.TemplateResponse("closing.html", {"request": request, "stocks": rows, "header_txt": header_txt})
 
 
 # Page for Closing Lows
@@ -330,15 +331,16 @@ async def closing_lows(request: Request):
     conn.row_factory = sqlite3.Row
     cursor = conn.cursor()
     cursor.execute("""
-        SELECT symbol, name, date, MIN(close) 
+        SELECT symbol, name, date, MIN(close) as close 
         FROM stock JOIN stock_price ON stock.id = stock_price.stock_id
         GROUP BY stock_id
-        ORDER BY close ASC
+        ORDER BY date DESC
         LIMIT 50
     """)
     rows = cursor.fetchall()
+    header_txt = "Closing Lows"
     
-    return templates.TemplateResponse("closing.html", {"request": request, "stocks": rows})
+    return templates.TemplateResponse("closing.html", {"request": request, "stocks": rows, "header_txt": header_txt})
 
 
 
