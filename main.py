@@ -54,6 +54,13 @@ async def root(request: Request, page: str = '1', searchInput: str = None):  # -
         print(searchInput)
         cursor.execute("SELECT * FROM stock WHERE symbol LIKE ? OR name LIKE ? ORDER BY symbol LIMIT 50", (f'%{searchInput}%', f'%{searchInput}%'))
         rows = cursor.fetchall()
+
+        # Get the total count of stocks that match the search criteria
+        cursor.execute("SELECT COUNT(*) FROM stock WHERE symbol LIKE ? OR name LIKE ?", (f'%{searchInput}%', f'%{searchInput}%'))
+        total_stocks = cursor.fetchone()[0]
+        pages = total_stocks // 50
+        print(pages)
+        
         #Get the most recent closing price for each stock to display on home page
         cursor.execute("""
             SELECT stock_id, close
@@ -74,8 +81,7 @@ async def root(request: Request, page: str = '1', searchInput: str = None):  # -
                 stock_dict['recent_price'] = round(stock_dict['recent_price'], 2)
             stock = stock_dict
             stocks.append(stock)
-            
-        pages = len(stocks) // 50
+        
         return templates.TemplateResponse("home.html", {"request": request, "stocks": stocks, "searchInput": searchInput, "pages": pages})
 
             
