@@ -36,4 +36,10 @@ current_date = dt.date.today().isoformat()
 
 for stock in stocks:
     minute_bars = api.get_bars(stock[0], '1Min', start="2024-03-09", end="2024-03-09").df
+    
     print(minute_bars)
+
+    opening_range_mask = (minute_bars.index >= "2024-03-09 09:30:00-05:00") & (minute_bars.index < "2024-03-09 09:45:00-05:00")
+    opening_range_bars = minute_bars.loc[opening_range_mask]
+
+    print(opening_range_bars)
