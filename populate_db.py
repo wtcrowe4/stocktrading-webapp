@@ -53,8 +53,8 @@ for asset in assets:
 
 #chunking and getting all daily data for last week
 chunk_size = 200
-start_date = '2024-02-16'
-end_date = '2024-02-23'
+start_date = '2024-02-23'
+end_date = '2024-03-08'
 
 
 for i in range(0, len(symbols), chunk_size):
