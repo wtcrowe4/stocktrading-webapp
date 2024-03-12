@@ -33,13 +33,15 @@ cursor.execute('''
 stocks = cursor.fetchall()
 
 current_date = dt.date.today().isoformat()
+current_date_str = "2024-03-11"
+opening_min_bar = f"{str(current_date_str)} 08:00:00+00:00"
+fifteen_min_bar = f"{str(current_date_str)} 08:15:00+00:00"
 
 for stock in stocks:
-    minute_bars = api.get_bars(stock[0], '1Min', start="2024-03-09", end="2024-03-09").df
-    
-    print(minute_bars)
-
-    opening_range_mask = (minute_bars.index >= "2024-03-09 09:30:00-05:00") & (minute_bars.index < "2024-03-09 09:45:00-05:00")
+    minute_bars = api.get_bars(stock[0], '1Min', start=current_date_str, end=current_date_str).df
+    print(stock)
+    opening_range_mask = (minute_bars.index >= opening_min_bar) & (minute_bars.index <= fifteen_min_bar)
     opening_range_bars = minute_bars.loc[opening_range_mask]
-
     print(opening_range_bars)
+
+    
