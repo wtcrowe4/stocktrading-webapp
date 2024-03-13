@@ -40,8 +40,26 @@ fifteen_min_bar = f"{str(current_date_str)} 08:15:00+00:00"
 for stock in stocks:
     minute_bars = api.get_bars(stock[0], '1Min', start=current_date_str, end=current_date_str).df
     print(stock)
+    
     opening_range_mask = (minute_bars.index >= opening_min_bar) & (minute_bars.index <= fifteen_min_bar)
     opening_range_bars = minute_bars.loc[opening_range_mask]
     print(opening_range_bars)
+    
+    opening_range_low = opening_range_bars['low'].min()
+    opening_range_high = opening_range_bars['high'].max()
+    opening_range = opening_range_high - opening_range_low
+    print(opening_range_high, opening_range_low, opening_range)
+
+    after_opening_range_mask = minute_bars.index > fifteen_min_bar
+    after_opening_bars = minute_bars.loc[after_opening_range_mask]
+    #print(after_opening_bars)
+    after_opening_range_breakout = after_opening_bars[after_opening_bars['close'] > opening_range_high]
+    if not after_opening_range_breakout.empty:
+        print(after_opening_range_breakout)
+        limit_price = after_opening_range_breakout.iloc[0]['close']
+        print(limit_price)
+        print(f"Placed order for {stock} at ${limit_price} at {after_opening_range_breakout.iloc[0].name}, with a range of +-{opening_range}.")
+
+
 
     
