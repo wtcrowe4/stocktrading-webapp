@@ -255,8 +255,9 @@ async def add_favorite_stock(stock_id: int):
         user_favorite_stocks.append(stock_id)
         print("Added to favorites:", stock_id, user_favorite_stocks)
     stock_symbol = sqlite3.connect(db_url).cursor().execute("SELECT symbol FROM stock WHERE id=?", (stock_id,)).fetchone()[0]
+    url_symbol = quote(stock_symbol, safe='')
     #return {"message": "Stock added to favorites", "favorite_stocks": user_favorite_stocks}
-    return RedirectResponse(url=f"/stock/{stock_symbol}", status_code=303)
+    return RedirectResponse(url=f"/stock/{url_symbol}", status_code=303)
 
 @app.post("/remove_favorite/{stock_id}")
 async def remove_favorite_stock(stock_id: int):
@@ -265,8 +266,9 @@ async def remove_favorite_stock(stock_id: int):
         user_favorite_stocks.remove(stock_id)
         print("Removed from favorites:", stock_id, user_favorite_stocks)
     stock_symbol = sqlite3.connect(db_url).cursor().execute("SELECT symbol FROM stock WHERE id=?", (stock_id,)).fetchone()[0]
+    url_symbol = quote(stock_symbol, safe='')
     #return {"message": "Stock removed from favorites", "favorite_stocks": user_favorite_stocks}
-    return RedirectResponse(url=f"/stock/{stock_symbol}", status_code=303)
+    return RedirectResponse(url=f"/stock/{url_symbol}", status_code=303)
 
 
 #Route for strategies
