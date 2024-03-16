@@ -56,7 +56,7 @@ request_params = CryptoBarsRequest(
                         symbol_or_symbols=crypto_symbols,
                         timeframe=TimeFrame.Day,
                         start="2024-02-01T00:00:00Z",
-                        end="2024-02-02T00:00:00Z"
+                        end="2024-03-01T00:00:00Z"
                         )
 
 bitcoin_bars = client.get_crypto_bars(request_params).df
@@ -69,9 +69,9 @@ for symbol in crypto_symbols:
         print(index, row)
         day_timestamp_str = index.strftime('%Y-%m-%d')
         cursor.execute('''
-                        INSERT INTO stock_price (stock_id, date, open, high, low, close, volume)
-                        VALUES ((SELECT id FROM stock WHERE symbol = ?), ?, ?, ?, ?, ?, ?)
-                        ''', (symbol, day_timestamp_str, row['open'], row['high'], row['low'], row['close'], row['volume']))
+                        INSERT INTO stock_price (stock_id, date, timestamp, open, high, low, close, volume)
+                        VALUES ((SELECT id FROM stock WHERE symbol = ?), ?, ?, ?, ?, ?, ?, ?)
+                        ''', (symbol, day_timestamp_str, str(index), row['open'], row['high'], row['low'], row['close'], row['volume']))
         
 conn.commit()
 

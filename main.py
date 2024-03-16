@@ -80,7 +80,7 @@ async def root(request: Request, page: str = '1', searchInput: str = None):  # -
                 stock_dict['recent_price'] = round(stock_dict['recent_price'], 2)
             
             
-            stock_dict['url_symbol'] = quote(stock_dict['symbol'])
+            stock_dict['url_symbol'] = quote(stock_dict['symbol'], safe='')
             stock = stock_dict
             
             stocks.append(stock)
