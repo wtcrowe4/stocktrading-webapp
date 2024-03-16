@@ -55,14 +55,14 @@ client = CryptoHistoricalDataClient()
 request_params = CryptoBarsRequest(
                         symbol_or_symbols=crypto_symbols,
                         timeframe=TimeFrame.Day,
-                        start="2024-02-01T00:00:00Z",
-                        end="2024-03-01T00:00:00Z"
+                        start="2024-03-01T00:00:00Z",
+                        end="2024-03-02T00:00:00Z"
                         )
 
 bitcoin_bars = client.get_crypto_bars(request_params).df
 print(bitcoin_bars)
 
-# Convert data to store in database table stock_price
+#Convert data to store in database table stock_price
 for symbol in crypto_symbols:
     bars = bitcoin_bars.loc[symbol]
     for index, row in bars.iterrows():
@@ -73,7 +73,11 @@ for symbol in crypto_symbols:
                         VALUES ((SELECT id FROM stock WHERE symbol = ?), ?, ?, ?, ?, ?, ?, ?)
                         ''', (symbol, day_timestamp_str, str(index), row['open'], row['high'], row['low'], row['close'], row['volume']))
         
+
+
+
+
+
+
+
 conn.commit()
-
-
-
