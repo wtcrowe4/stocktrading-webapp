@@ -10,6 +10,7 @@ from fastapi import APIRouter
 from fastapi.responses import RedirectResponse
 # from models.Stock import Stock
 # from models.Stock_Price import Stock_Price
+from urllib.parse import quote, unquote
 
 dotenv.load_dotenv()
 
@@ -21,11 +22,12 @@ templates = Jinja2Templates(directory="templates")
 #add_pagination(app)
 
 
-# Stock data class with stock and stock price data
-# class StockData:
-#     def __init__(self, stock: Stock, stock_price: List[Stock_Price]):
-#         self.stock = stock
-#         self.stock_price = stock_price
+# Connect to the database
+conn = sqlite3.connect(db_url)
+conn.row_factory = sqlite3.Row  
+cursor = conn.cursor()
+
+
 
 # Home page
 @app.get("/")   #, response_model=Page[StockData]
@@ -43,10 +45,7 @@ async def root(request: Request, page: str = '1', searchInput: str = None):  # -
         page = int(page)
         offset = (page - 1) * 50
 
-    # Connect to the database
-    conn = sqlite3.connect(db_url)
-    conn.row_factory = sqlite3.Row  
-    cursor = conn.cursor()
+
     
     # Input from search bar
     searchInput = request.query_params.get('searchInput')
@@ -79,8 +78,13 @@ async def root(request: Request, page: str = '1', searchInput: str = None):  # -
             stock_dict['recent_price'] = recent_prices_dict.get(stock_dict['id'], None)
             if stock_dict['recent_price'] is not None:
                 stock_dict['recent_price'] = round(stock_dict['recent_price'], 2)
+            
+            
+            stock_dict['url_symbol'] = quote(stock_dict['symbol'])
             stock = stock_dict
+            
             stocks.append(stock)
+          
         
         return templates.TemplateResponse("home.html", {"request": request, "stocks": stocks, "searchInput": searchInput, "pages": pages})
 
@@ -107,8 +111,16 @@ async def root(request: Request, page: str = '1', searchInput: str = None):  # -
         stock_dict['recent_price'] = recent_prices_dict.get(stock_dict['id'], None)
         if stock_dict['recent_price'] is not None:
             stock_dict['recent_price'] = round(stock_dict['recent_price'], 2)
+        
+        stock_dict['url_symbol'] = quote(stock_dict['symbol'], safe='')
+             
+        
         stock = stock_dict
+
+        
         stocks.append(stock)
+
+    
 
     pages = cursor.execute("SELECT COUNT(*) FROM stock").fetchone()[0] // 50
 
@@ -126,6 +138,84 @@ user_recent_stocks = [10966, 377, 5007, 5553, 6380, 105, 9312, 6562]
 user_favorite_stocks = [377, 5007, 5553, 6380, 9312] #6562,Berkshire Hathaway
 @app.get("/stock/{symbol}")
 async def stock_data(request: Request, symbol):
+    print("url_symbol", symbol)
+    symbol = unquote(symbol)
+    print(symbol)
+    conn = sqlite3.connect(db_url)
+    conn.row_factory = sqlite3.Row
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM stock WHERE symbol=?", (symbol,))
+    row = cursor.fetchone()
+    print(row['id'])
+    cursor.execute("SELECT * FROM stock_price WHERE stock_id=? ORDER BY date DESC", (row['id'],))
+    prices = cursor.fetchall()
+    
+   
+    #recently visited stocks
+    if row['id'] not in user_recent_stocks:
+        user_recent_stocks.insert(0, row['id'])
+    if len(user_recent_stocks) > 40:
+        user_recent_stocks.pop()
+    print("recent",user_recent_stocks)
+
+    #favorite stocks
+    print("favorites", user_favorite_stocks)
+
+    #strategies
+    cursor.execute("SELECT * FROM strategy")
+    strategies = cursor.fetchall()
+
+    return templates.TemplateResponse("stock_data.html", {"request": request, 
+                                                          "prices": prices, 
+                                                          "stock": row,
+                                                          "recent_stocks": user_recent_stocks,
+                                                          "favorite_stocks": user_favorite_stocks,
+                                                          "strategies": strategies})
+
+
+# @app.get("/stock/{url_symbol}")
+# async def stock_data(request: Request, url_symbol):
+#     print("url_symbol", url_symbol)
+#     symbol = unquote(url_symbol)
+#     print(symbol)
+#     conn = sqlite3.connect(db_url)
+#     conn.row_factory = sqlite3.Row
+#     cursor = conn.cursor()
+#     cursor.execute("SELECT * FROM stock WHERE symbol=?", (symbol,))
+#     row = cursor.fetchone()
+#     if row is None:
+#         return templates.TemplateResponse("404.html", {"request": request})
+#     cursor.execute("SELECT * FROM stock_price WHERE stock_id=? ORDER BY date DESC", (row['id'],))
+#     prices = cursor.fetchall()
+    
+#     #recently visited stocks
+#     if row['id'] not in user_recent_stocks:
+#         user_recent_stocks.insert(0, row['id'])
+#     if len(user_recent_stocks) > 40:
+#         user_recent_stocks.pop()
+#     print("recent",user_recent_stocks)
+
+#     #favorite stocks
+#     print("favorites", user_favorite_stocks)
+
+#     #strategies
+#     cursor.execute("SELECT * FROM strategy")
+#     strategies = cursor.fetchall()
+
+#     return templates.TemplateResponse("stock_data.html", {"request": request, 
+#                                                           "prices": prices, 
+#                                                           "stock": row,
+#                                                           "recent_stocks": user_recent_stocks,
+#                                                           "favorite_stocks": user_favorite_stocks,
+#                                                           "strategies": strategies})
+
+
+# Pages for bitcoin assets with a slash in the symbol
+@app.get("/stock/{symbol1}/{symbol2}")
+async def stock_data(request: Request, symbol1, symbol2):
+    
+    symbol = symbol1 + '/' + symbol2
+    print(symbol)
     conn = sqlite3.connect(db_url)
     conn.row_factory = sqlite3.Row
     cursor = conn.cursor()
