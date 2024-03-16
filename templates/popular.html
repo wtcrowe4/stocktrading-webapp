@@ -15,13 +15,15 @@
         </thead>
         <tbody>
             {% for stock in stocks %}
+            
             <tr>
                 <td>{{ stock.symbol }}</td>
-                <td><a style="color: lightgrey;" href="/stock/{{  stock.symbol  }}">{{ stock.name }}</a></td>
+                <td><a style="color: lightgrey;" href="/stock/{{  stock.url_symbol  }}">{{ stock.name }}</a></td>
                 <td>{{ stock.date }}</td>
                 <td>{{ stock.volume }}</td>
             </tr>
             {% endfor %}
+            
         </tbody>
     </table>
 

@@ -63,15 +63,15 @@ bitcoin_bars = client.get_crypto_bars(request_params).df
 print(bitcoin_bars)
 
 #Convert data to store in database table stock_price
-for symbol in crypto_symbols:
-    bars = bitcoin_bars.loc[symbol]
-    for index, row in bars.iterrows():
-        print(index, row)
-        day_timestamp_str = index.strftime('%Y-%m-%d')
-        cursor.execute('''
-                        INSERT INTO stock_price (stock_id, date, timestamp, open, high, low, close, volume)
-                        VALUES ((SELECT id FROM stock WHERE symbol = ?), ?, ?, ?, ?, ?, ?, ?)
-                        ''', (symbol, day_timestamp_str, str(index), row['open'], row['high'], row['low'], row['close'], row['volume']))
+# for symbol in crypto_symbols:
+#     bars = bitcoin_bars.loc[symbol]
+#     for index, row in bars.iterrows():
+#         print(index, row)
+#         day_timestamp_str = index.strftime('%Y-%m-%d')
+#         cursor.execute('''
+#                         INSERT INTO stock_price (stock_id, date, timestamp, open, high, low, close, volume)
+#                         VALUES ((SELECT id FROM stock WHERE symbol = ?), ?, ?, ?, ?, ?, ?, ?)
+#                         ''', (symbol, day_timestamp_str, str(index), row['open'], row['high'], row['low'], row['close'], row['volume']))
         
 
 

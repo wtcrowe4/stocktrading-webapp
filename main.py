@@ -299,8 +299,17 @@ async def popular_stocks(request: Request):
         LIMIT 50
     """)
     rows = cursor.fetchall()
+
+    # Add a url_symbol key to each stock dictionary
+    stocks=[]
+    for stock in rows:
+        stock = dict(stock)
+        stock['url_symbol'] = quote(stock['symbol'], safe='')
+        stocks.append(stock)
+        
+
     
-    return templates.TemplateResponse("popular.html", {"request": request, "stocks": rows, })
+    return templates.TemplateResponse("popular.html", {"request": request, "stocks": stocks})
 
 #Page for Recent Stocks
 @app.get("/recent")
@@ -328,6 +337,7 @@ async def recent_stocks(request: Request, user_recent_stocks=user_recent_stocks)
             stock_dict['volume'] = price['volume']
             stock_dict['high'] = price['high']
             stock_dict['low'] = price['low']
+            
 
         stocks.append(stock_dict)
     
