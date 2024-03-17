@@ -2,6 +2,7 @@ import sqlite3
 import os
 import dotenv
 
+
 dotenv.load_dotenv()
 db_url = os.getenv('DATABASE_URL')
 
@@ -64,6 +65,14 @@ cursor.execute('''
 #     ('opening_range_breakdown', 'Opening range breakdown.', 'Opening Range Breakdown'),
 # ]
 # cursor.executemany('INSERT INTO strategy (name, description, viewable_name) VALUES (?, ?, ?)', strategies)
+
+# Add url_symbol for stock table to fix symbols with a slash and populate it with the encoded symbol
+cursor.execute('ALTER TABLE stock ADD COLUMN url_symbol TEXT NOT NULL DEFAULT symbol')
+cursor.execute('UPDATE stock SET url_symbol = REPLACE(symbol, "/", "%2F")')
+
+
+
+
 
 
 

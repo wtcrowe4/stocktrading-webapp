@@ -38,7 +38,7 @@
     <!--open ui container from index file-->
     <div class="ui container">
     {% for symbol in recent_symbols %}
-        <a href="/stock/{{ symbol }}" class="ui label">{{ symbol }}</a>
+        <a href="/stock/{{ url_symbol }}" class="ui label">{{ symbol }}</a>
     {% endfor %}
     <table class="ui selectable inverted table">
         <thead>
@@ -55,7 +55,7 @@
             {% for stock in stocks %}
             <tr>
                 <td>{{ stock.symbol }}</td>
-                <td><a style="color: lightgrey;" href="/stock/{{  stock.symbol  }}">{{ stock.name }}</a></td>
+                <td><a style="color: lightgrey;" href="/stock/{{  stock.url_symbol  }}">{{ stock.name }}</a></td>
                 <td>{{ stock.high }}</td>
                 <td>{{ stock.low }}</td>
                 <td>{{ stock.close }}</td>
