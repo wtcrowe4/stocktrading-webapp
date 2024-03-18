@@ -80,7 +80,7 @@ async def root(request: Request, page: str = '1', searchInput: str = None):  # -
                 stock_dict['recent_price'] = round(stock_dict['recent_price'], 2)
             
             
-            stock_dict['url_symbol'] = quote(stock_dict['symbol'], safe='')
+            #stock_dict['url_symbol'] = quote(stock_dict['symbol'], safe='')
             stock = stock_dict
             
             stocks.append(stock)
@@ -112,7 +112,7 @@ async def root(request: Request, page: str = '1', searchInput: str = None):  # -
         if stock_dict['recent_price'] is not None:
             stock_dict['recent_price'] = round(stock_dict['recent_price'], 2)
         
-        stock_dict['url_symbol'] = quote(stock_dict['symbol'], safe='')
+        #stock_dict['url_symbol'] = quote(stock_dict['symbol'], safe='')
              
         
         stock = stock_dict
@@ -134,8 +134,20 @@ async def root(request: Request, page: str = '1', searchInput: str = None):  # -
     
 #Page for individual stock data
 # If visited, add this stock to a list of recently visited stocks
-user_recent_stocks = [10966, 377, 5007, 5553, 6380, 105, 9312, 6562]
-user_favorite_stocks = [377, 5007, 5553, 6380, 9312] #6562,Berkshire Hathaway
+user_recent_stock_ids = [10966, 377, 5007, 5553, 6380, 105, 9312, 6562]
+user_recent_stocks = []
+for id in user_recent_stock_ids:
+    cursor.execute("SELECT * FROM stock WHERE id=?", (id,))
+    stock = cursor.fetchone()
+    user_recent_stocks.append(dict(stock))
+    
+user_favorite_stock_ids = [377, 5007, 5553, 6380, 9312] 
+user_favorite_stocks = []
+for id in user_favorite_stock_ids:
+    cursor.execute("SELECT * FROM stock WHERE id=?", (id,))
+    stock = cursor.fetchone()
+    user_favorite_stocks.append(dict(stock))
+
 @app.get("/stock/{symbol}")
 async def stock_data(request: Request, symbol):
     print("url_symbol", symbol)
@@ -292,7 +304,7 @@ async def popular_stocks(request: Request):
     conn.row_factory = sqlite3.Row
     cursor = conn.cursor()
     cursor.execute("""
-        SELECT symbol, name, date, volume
+        SELECT symbol, name, date, volume, url_symbol
         FROM stock JOIN stock_price ON stock.id = stock_price.stock_id
         GROUP BY volume
         ORDER BY volume DESC
@@ -304,7 +316,7 @@ async def popular_stocks(request: Request):
     stocks=[]
     for stock in rows:
         stock = dict(stock)
-        stock['url_symbol'] = quote(stock['symbol'], safe='')
+        #stock['url_symbol'] = quote(stock['symbol'], safe='')
         stocks.append(stock)
         
 
@@ -315,7 +327,7 @@ async def popular_stocks(request: Request):
 @app.get("/recent")
 async def recent_stocks(request: Request, user_recent_stocks=user_recent_stocks):
     #for user recent stocks array get the stock information and the latest stock prices
-    user_recent_stocks = list(dict.fromkeys(user_recent_stocks))    
+    #user_recent_stocks = list(dict.fromkeys(user_recent_stocks))    
     print(user_recent_stocks)
     conn = sqlite3.connect(db_url)
     conn.row_factory = sqlite3.Row
@@ -325,57 +337,58 @@ async def recent_stocks(request: Request, user_recent_stocks=user_recent_stocks)
     #     cursor.execute("SELECT * FROM stock WHERE id=?", (stock_id,))
     #     row = cursor.fetchone()
     #     stocks.append(row)
-    for stock_id in user_recent_stocks:
-        cursor.execute("SELECT * FROM stock WHERE id=?", (stock_id,))
-        stock = cursor.fetchone()
-        stock_dict = dict(stock)
-        cursor.execute("SELECT * FROM stock_price WHERE stock_id=? ORDER BY date DESC LIMIT 1", (stock_id,))
-        price = cursor.fetchone()
-        if price is not None:
-            stock_dict['close'] = price['close']
-            stock_dict['date'] = price['date']
-            stock_dict['volume'] = price['volume']
-            stock_dict['high'] = price['high']
-            stock_dict['low'] = price['low']
+    # for stock_id in user_recent_stocks:
+    #     cursor.execute("SELECT * FROM stock WHERE id=?", (stock_id,))
+    #     stock = cursor.fetchone()
+    #     stock_dict = dict(stock)
+    #     cursor.execute("SELECT * FROM stock_price WHERE stock_id=? ORDER BY date DESC LIMIT 1", (stock_id,))
+    #     price = cursor.fetchone()
+    #     if price is not None:
+    #         stock_dict['close'] = price['close']
+    #         stock_dict['date'] = price['date']
+    #         stock_dict['volume'] = price['volume']
+    #         stock_dict['high'] = price['high']
+    #         stock_dict['low'] = price['low']
+            #stock_dict['url_symbol'] = quote(stock_dict['symbol'], safe='')
             
 
-        stocks.append(stock_dict)
+        #stocks.append(stock_dict)
     
     user_recent_symbols = [stock['symbol'] for stock in stocks]
     print(user_recent_symbols)
     
-    return templates.TemplateResponse("recent.html", {"request": request, "stocks": stocks, "recent_symbols": user_recent_symbols})
+    return templates.TemplateResponse("recent.html", {"request": request, "stocks": user_recent_stocks, "recent_symbols": user_recent_symbols})
 
 
 #Page for Favorite Stocks
 @app.get("/favorites")
 async def favorite_stocks(request: Request, user_favorite_stocks=user_favorite_stocks):
     #for user favorite stocks array get the stock information and the latest stock prices
-    user_favorite_stocks = list(dict.fromkeys(user_favorite_stocks))
+    #user_favorite_stocks = list(dict.fromkeys(user_favorite_stocks))
     print(user_favorite_stocks)
     conn = sqlite3.connect(db_url)
     conn.row_factory = sqlite3.Row
     cursor = conn.cursor()
     stocks=[]
-    for stock_id in user_favorite_stocks:
-        cursor.execute("SELECT * FROM stock WHERE id=?", (stock_id,))
-        stock = cursor.fetchone()
-        stock_dict = dict(stock)
-        cursor.execute("SELECT * FROM stock_price WHERE stock_id=? ORDER BY date DESC LIMIT 1", (stock_id,))
-        price = cursor.fetchone()
-        if price is not None:
-            stock_dict['close'] = price['close']
-            stock_dict['date'] = price['date']
-            stock_dict['volume'] = price['volume']
-            stock_dict['high'] = price['high']
-            stock_dict['low'] = price['low']
+    # for stock_id in user_favorite_stocks:
+    #     cursor.execute("SELECT * FROM stock WHERE id=?", (stock_id,))
+    #     stock = cursor.fetchone()
+    #     stock_dict = dict(stock)
+    #     cursor.execute("SELECT * FROM stock_price WHERE stock_id=? ORDER BY date DESC LIMIT 1", (stock_id,))
+    #     price = cursor.fetchone()
+    #     if price is not None:
+    #         stock_dict['close'] = price['close']
+    #         stock_dict['date'] = price['date']
+    #         stock_dict['volume'] = price['volume']
+    #         stock_dict['high'] = price['high']
+    #         stock_dict['low'] = price['low']
 
-        stocks.append(stock_dict)
+    #     stocks.append(stock_dict)
     
     user_favorite_symbols = [stock['symbol'] for stock in stocks]
     print(user_favorite_symbols)
-    print(stocks[0]['exchange'], stocks[0]['symbol'])
-    return templates.TemplateResponse("favorites.html", {"request": request, "stocks": stocks, "favorite_symbols": user_favorite_symbols})
+    print(user_favorite_stocks[0]['exchange'], user_favorite_stocks[0]['symbol'])
+    return templates.TemplateResponse("favorites.html", {"request": request, "stocks": user_favorite_stocks, "favorite_symbols": user_favorite_symbols})
 
 
 #Page for Intraday Highs
