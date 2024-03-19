@@ -6,7 +6,7 @@
     <h1 class="ui huge header center aligned" style="color: white;font-size: 4rem;">{{ stock.name }}</h1>
     <div class="ui divider"></div>
     <div class="ui container flex padded text">
-        {% if stock.id in favorite_stocks %}
+        {% if stock in favorite_stocks %}
             <form class="ui left floated" method="post" action="/remove_favorite/{{ stock.id }}">
                 <input class="ui white button left floated" type="submit" value="Remove from Favorites"/>
             </form>

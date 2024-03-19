@@ -263,9 +263,10 @@ async def stock_data(request: Request, symbol1, symbol2):
 @app.post("/add_favorite/{stock_id}")
 async def add_favorite_stock(stock_id: int):
     global user_favorite_stocks
-    if stock_id not in user_favorite_stocks:
-        user_favorite_stocks.append(stock_id)
-        print("Added to favorites:", stock_id, user_favorite_stocks)
+    stock = sqlite3.connect(db_url).cursor().execute("SELECT * FROM stock WHERE id=?", (stock_id,)).fetchone()
+    if stock not in user_favorite_stocks:
+        user_favorite_stocks.append(stock)
+        print("Added to favorites:", stock, user_favorite_stocks)
     stock_symbol = sqlite3.connect(db_url).cursor().execute("SELECT symbol FROM stock WHERE id=?", (stock_id,)).fetchone()[0]
     url_symbol = quote(stock_symbol, safe='')
     #return {"message": "Stock added to favorites", "favorite_stocks": user_favorite_stocks}
@@ -332,32 +333,29 @@ async def recent_stocks(request: Request, user_recent_stocks=user_recent_stocks)
     conn = sqlite3.connect(db_url)
     conn.row_factory = sqlite3.Row
     cursor = conn.cursor()
-    stocks=[]
-    # for stock_id in user_recent_stocks:
-    #     cursor.execute("SELECT * FROM stock WHERE id=?", (stock_id,))
-    #     row = cursor.fetchone()
-    #     stocks.append(row)
-    # for stock_id in user_recent_stocks:
-    #     cursor.execute("SELECT * FROM stock WHERE id=?", (stock_id,))
-    #     stock = cursor.fetchone()
-    #     stock_dict = dict(stock)
-    #     cursor.execute("SELECT * FROM stock_price WHERE stock_id=? ORDER BY date DESC LIMIT 1", (stock_id,))
-    #     price = cursor.fetchone()
-    #     if price is not None:
-    #         stock_dict['close'] = price['close']
-    #         stock_dict['date'] = price['date']
-    #         stock_dict['volume'] = price['volume']
-    #         stock_dict['high'] = price['high']
-    #         stock_dict['low'] = price['low']
-            #stock_dict['url_symbol'] = quote(stock_dict['symbol'], safe='')
-            
-
-        #stocks.append(stock_dict)
+    stock_data=[]
     
-    user_recent_symbols = [stock['symbol'] for stock in stocks]
+    for stock in user_recent_stocks:
+        print(stock)
+        
+        cursor.execute("""
+            SELECT stock.*, stock_price.close, stock_price.date, stock_price.volume, stock_price.high, stock_price.low
+            FROM stock
+            JOIN stock_price ON stock.id = stock_price.stock_id
+            WHERE stock.id IN (?, ?, ?, ?, ?, ?, ?, ?)
+            ORDER BY stock_price.date DESC
+        """, user_recent_stock_ids)
+        rows = cursor.fetchall()
+
+        stock_data = []
+        for row in rows:
+            stock_dict = dict(row)
+            stock_data.append(stock_dict)
+    
+    user_recent_symbols = [stock['symbol'] for stock in user_recent_stocks]
     print(user_recent_symbols)
     
-    return templates.TemplateResponse("recent.html", {"request": request, "stocks": user_recent_stocks, "recent_symbols": user_recent_symbols})
+    return templates.TemplateResponse("recent.html", {"request": request, "stocks": user_recent_stocks, "stock_data": stock_data, "recent_symbols": user_recent_symbols})
 
 
 #Page for Favorite Stocks
