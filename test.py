@@ -74,6 +74,23 @@ print(bitcoin_bars)
 #                         ''', (symbol, day_timestamp_str, str(index), row['open'], row['high'], row['low'], row['close'], row['volume']))
         
 
+# Add tables for favorite and recent stocks to database
+cursor.execute('''
+                CREATE TABLE favorite_stock (
+                    id INTEGER PRIMARY KEY,
+                    stock_id INTEGER,
+                    FOREIGN KEY(stock_id) REFERENCES stock(id)
+                )
+                ''')
+
+cursor.execute('''
+                CREATE TABLE recent_stock (
+                    id INTEGER PRIMARY KEY,
+                    stock_id INTEGER,
+                    FOREIGN KEY(stock_id) REFERENCES stock(id)
+                )
+                ''')
+
 
 
 
