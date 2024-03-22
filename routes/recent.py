@@ -28,6 +28,25 @@ conn.row_factory = sqlite3.Row
 cursor = conn.cursor()
 
 
+# Get Recent/Favorites
+user_recent_stocks = []
+user_favorite_stocks = []
+
+cursor.execute("SELECT * FROM favorite_stock;")
+rows = cursor.fetchall()
+for row in rows:
+    user_favorite_stocks.append(row['stock_id'])
+
+cursor.execute("SELECT * FROM recent_stock;")
+rows = cursor.fetchall()
+for row in rows:
+    user_recent_stocks.append(row['stock_id'])
+
+user_recent_stock_ids = tuple(user_recent_stocks)
+user_favorite_stock_ids = tuple(user_favorite_stocks)
+
+
+
 #Page for Recent Stocks
 @app.get("/recent")
 async def recent_stocks(request: Request, user_recent_stocks=user_recent_stocks):
