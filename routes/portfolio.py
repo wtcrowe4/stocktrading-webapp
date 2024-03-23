@@ -27,6 +27,19 @@ conn = sqlite3.connect(db_url)
 conn.row_factory = sqlite3.Row  
 cursor = conn.cursor()
 
+# Get Recent/Favorites
+user_recent_stocks = []
+user_favorite_stocks = []
+
+cursor.execute("SELECT * FROM favorite_stock;")
+rows = cursor.fetchall()
+for row in rows:
+    user_favorite_stocks.append(row['stock_id'])
+
+cursor.execute("SELECT * FROM recent_stock;")
+rows = cursor.fetchall()
+for row in rows:
+    user_recent_stocks.append(row['stock_id'])
 
 # Page for Portfolio/currently active strategies
 @app.get("/portfolio")
