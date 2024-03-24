@@ -92,7 +92,16 @@ cursor.execute('''
                 ''')
 
 
+#10966, 377, 5007, 5553, 6380, 105, 9312, 6562
+cursor.execute('''
+                INSERT INTO favorite_stock (stock_id)
+                VALUES (10966), (377), (5007), (5553), (6380), (105), (9312), (6562)
+                ''')
 
+cursor.execute('''
+                INSERT INTO recent_stock (stock_id)
+                VALUES (10966), (377), (5007), (5553), (6380), (105), (9312)
+                ''')
 
 
 
