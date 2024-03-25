@@ -134,19 +134,36 @@ async def root(request: Request, page: str = '1', searchInput: str = None):  # -
     
 #Page for individual stock data
 # If visited, add this stock to a list of recently visited stocks
-user_recent_stock_ids = [10966, 377, 5007, 5553, 6380, 105, 9312, 6562]
-user_recent_stocks = []
-for id in user_recent_stock_ids:
-    cursor.execute("SELECT * FROM stock WHERE id=?", (id,))
-    stock = cursor.fetchone()
-    user_recent_stocks.append(dict(stock))
+# user_recent_stock_ids = [10966, 377, 5007, 5553, 6380, 105, 9312, 6562]
+# user_recent_stocks = []
+# for id in user_recent_stock_ids:
+#     cursor.execute("SELECT * FROM stock WHERE id=?", (id,))
+#     stock = cursor.fetchone()
+#     user_recent_stocks.append(dict(stock))
     
-user_favorite_stock_ids = [377, 5007, 5553, 6380, 9312] 
+# user_favorite_stock_ids = [377, 5007, 5553, 6380, 9312] 
+# user_favorite_stocks = []
+# for id in user_favorite_stock_ids:
+#     cursor.execute("SELECT * FROM stock WHERE id=?", (id,))
+#     stock = cursor.fetchone()
+#     user_favorite_stocks.append(dict(stock))
+
+user_recent_stocks = []
 user_favorite_stocks = []
-for id in user_favorite_stock_ids:
-    cursor.execute("SELECT * FROM stock WHERE id=?", (id,))
+
+cursor.execute("SELECT * FROM favorite_stock;")
+rows = cursor.fetchall()
+for row in rows:
+    cursor.execute("SELECT * FROM stock WHERE id=?", (row['stock_id'],))
     stock = cursor.fetchone()
-    user_favorite_stocks.append(dict(stock))
+    user_favorite_stocks.append(stock)
+
+cursor.execute("SELECT * FROM recent_stock;")
+rows = cursor.fetchall()
+for row in rows:
+    cursor.execute("SELECT * FROM stock WHERE id=?", (row['stock_id'],))
+    stock = cursor.fetchone()
+    user_recent_stocks.append(stock)
 
 @app.get("/stock/{symbol}")
 async def stock_data(request: Request, symbol):

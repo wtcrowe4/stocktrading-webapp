@@ -34,12 +34,16 @@ user_favorite_stocks = []
 cursor.execute("SELECT * FROM favorite_stock;")
 rows = cursor.fetchall()
 for row in rows:
-    user_favorite_stocks.append(row['stock_id'])
+    cursor.execute("SELECT * FROM stock WHERE id=?", (row['stock_id'],))
+    stock = cursor.fetchone()
+    user_favorite_stocks.append(stock)
 
 cursor.execute("SELECT * FROM recent_stock;")
 rows = cursor.fetchall()
 for row in rows:
-    user_recent_stocks.append(row['stock_id'])
+    cursor.execute("SELECT * FROM stock WHERE id=?", (row['stock_id'],))
+    stock = cursor.fetchone()
+    user_recent_stocks.append(stock)
 
 # Page for Portfolio/currently active strategies
 @app.get("/portfolio")
