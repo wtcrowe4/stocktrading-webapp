@@ -13,7 +13,8 @@ from fastapi.responses import RedirectResponse
 from urllib.parse import quote, unquote
 
 from routes import *
-from routes.stock_data import stock_data
+
+
 
 
 dotenv.load_dotenv()
@@ -26,8 +27,8 @@ app.mount("/assets", StaticFiles(directory="assets"), name="assets")
 templates = Jinja2Templates(directory="templates")
 #add_pagination(app)
 
-router.include_router(stock_data.router)
-app.include_router(router)
+
+
 
 
 # Connect to the database
@@ -139,23 +140,6 @@ async def root(request: Request, page: str = '1', searchInput: str = None):  # -
     #return paginate(templates.TemplateResponse("home.html", {"request": request, "stocks": stocks, "searchInput": searchInput}))
 
 
-    
-#Page for individual stock data
-# If visited, add this stock to a list of recently visited stocks
-# user_recent_stock_ids = [10966, 377, 5007, 5553, 6380, 105, 9312, 6562]
-# user_recent_stocks = []
-# for id in user_recent_stock_ids:
-#     cursor.execute("SELECT * FROM stock WHERE id=?", (id,))
-#     stock = cursor.fetchone()
-#     user_recent_stocks.append(dict(stock))
-    
-# user_favorite_stock_ids = [377, 5007, 5553, 6380, 9312] 
-# user_favorite_stocks = []
-# for id in user_favorite_stock_ids:
-#     cursor.execute("SELECT * FROM stock WHERE id=?", (id,))
-#     stock = cursor.fetchone()
-#     user_favorite_stocks.append(dict(stock))
-
 user_recent_stocks = []
 user_favorite_stocks = []
 
@@ -175,6 +159,28 @@ for row in rows:
 
 
 
+
+
+
+
+
+
+
+#Page for individual stock data
+# If visited, add this stock to a list of recently visited stocks
+# user_recent_stock_ids = [10966, 377, 5007, 5553, 6380, 105, 9312, 6562]
+# user_recent_stocks = []
+# for id in user_recent_stock_ids:
+#     cursor.execute("SELECT * FROM stock WHERE id=?", (id,))
+#     stock = cursor.fetchone()
+#     user_recent_stocks.append(dict(stock))
+    
+# user_favorite_stock_ids = [377, 5007, 5553, 6380, 9312] 
+# user_favorite_stocks = []
+# for id in user_favorite_stock_ids:
+#     cursor.execute("SELECT * FROM stock WHERE id=?", (id,))
+#     stock = cursor.fetchone()
+#     user_favorite_stocks.append(dict(stock))
 
 
 # @app.get("/stock/{symbol}")
@@ -288,29 +294,29 @@ for row in rows:
 #                                                           "strategies": strategies})
 
 
-# # Routes for favorite stocks
-# @app.post("/add_favorite/{stock_id}")
-# async def add_favorite_stock(stock_id: int):
-#     global user_favorite_stocks
-#     stock = sqlite3.connect(db_url).cursor().execute("SELECT * FROM stock WHERE id=?", (stock_id,)).fetchone()
-#     if stock not in user_favorite_stocks:
-#         user_favorite_stocks.append(stock)
-#         print("Added to favorites:", stock, user_favorite_stocks)
-#     stock_symbol = sqlite3.connect(db_url).cursor().execute("SELECT symbol FROM stock WHERE id=?", (stock_id,)).fetchone()[0]
-#     url_symbol = quote(stock_symbol, safe='')
-#     #return {"message": "Stock added to favorites", "favorite_stocks": user_favorite_stocks}
-#     return RedirectResponse(url=f"/stock/{url_symbol}", status_code=303)
+# Routes for favorite stocks
+@app.post("/add_favorite/{stock_id}")
+async def add_favorite_stock(stock_id: int):
+    global user_favorite_stocks
+    stock = sqlite3.connect(db_url).cursor().execute("SELECT * FROM stock WHERE id=?", (stock_id,)).fetchone()
+    if stock not in user_favorite_stocks:
+        user_favorite_stocks.append(stock)
+        print("Added to favorites:", stock, user_favorite_stocks)
+    stock_symbol = sqlite3.connect(db_url).cursor().execute("SELECT symbol FROM stock WHERE id=?", (stock_id,)).fetchone()[0]
+    url_symbol = quote(stock_symbol, safe='')
+    #return {"message": "Stock added to favorites", "favorite_stocks": user_favorite_stocks}
+    return RedirectResponse(url=f"/stock/{url_symbol}", status_code=303)
 
-# @app.post("/remove_favorite/{stock_id}")
-# async def remove_favorite_stock(stock_id: int):
-#     global user_favorite_stocks
-#     if stock_id in user_favorite_stocks:
-#         user_favorite_stocks.remove(stock_id)
-#         print("Removed from favorites:", stock_id, user_favorite_stocks)
-#     stock_symbol = sqlite3.connect(db_url).cursor().execute("SELECT symbol FROM stock WHERE id=?", (stock_id,)).fetchone()[0]
-#     url_symbol = quote(stock_symbol, safe='')
-#     #return {"message": "Stock removed from favorites", "favorite_stocks": user_favorite_stocks}
-#     return RedirectResponse(url=f"/stock/{url_symbol}", status_code=303)
+@app.post("/remove_favorite/{stock_id}")
+async def remove_favorite_stock(stock_id: int):
+    global user_favorite_stocks
+    if stock_id in user_favorite_stocks:
+        user_favorite_stocks.remove(stock_id)
+        print("Removed from favorites:", stock_id, user_favorite_stocks)
+    stock_symbol = sqlite3.connect(db_url).cursor().execute("SELECT symbol FROM stock WHERE id=?", (stock_id,)).fetchone()[0]
+    url_symbol = quote(stock_symbol, safe='')
+    #return {"message": "Stock removed from favorites", "favorite_stocks": user_favorite_stocks}
+    return RedirectResponse(url=f"/stock/{url_symbol}", status_code=303)
 
 
 # #Route for strategies
@@ -532,3 +538,6 @@ for row in rows:
 # async def not_found(request, exc):
 #     return templates.TemplateResponse("404.html", {"request": request}, status_code=404)
 
+
+# Add routes to the app
+app.include_router(router)
