@@ -13,6 +13,7 @@ from fastapi.responses import RedirectResponse
 from urllib.parse import quote, unquote
 
 from routes import *
+from routes import router
 
 
 
@@ -28,14 +29,37 @@ templates = Jinja2Templates(directory="templates")
 #add_pagination(app)
 
 
-
-
-
 # Connect to the database
 conn = sqlite3.connect(db_url)
 conn.row_factory = sqlite3.Row  
 cursor = conn.cursor()
 
+#Routes
+# Routes
+app.include_router(router)
+
+
+user_recent_stocks = []
+user_favorite_stocks = []
+
+cursor.execute("SELECT * FROM favorite_stock;")
+rows = cursor.fetchall()
+for row in rows:
+    cursor.execute("SELECT * FROM stock WHERE id=?", (row['stock_id'],))
+    stock = cursor.fetchone()
+    user_favorite_stocks.append(stock)
+
+cursor.execute("SELECT * FROM recent_stock;")
+rows = cursor.fetchall()
+for row in rows:
+    cursor.execute("SELECT * FROM stock WHERE id=?", (row['stock_id'],))
+    stock = cursor.fetchone()
+    user_recent_stocks.append(stock)
+
+
+
+# Routes
+app.include_router(router)
 
 
 # Home page
@@ -137,27 +161,7 @@ async def root(request: Request, page: str = '1', searchInput: str = None):  # -
                                                     "stocks": stocks, 
                                                     "searchInput": searchInput, 
                                                     "pages": pages})
-    #return paginate(templates.TemplateResponse("home.html", {"request": request, "stocks": stocks, "searchInput": searchInput}))
-
-
-user_recent_stocks = []
-user_favorite_stocks = []
-
-cursor.execute("SELECT * FROM favorite_stock;")
-rows = cursor.fetchall()
-for row in rows:
-    cursor.execute("SELECT * FROM stock WHERE id=?", (row['stock_id'],))
-    stock = cursor.fetchone()
-    user_favorite_stocks.append(stock)
-
-cursor.execute("SELECT * FROM recent_stock;")
-rows = cursor.fetchall()
-for row in rows:
-    cursor.execute("SELECT * FROM stock WHERE id=?", (row['stock_id'],))
-    stock = cursor.fetchone()
-    user_recent_stocks.append(stock)
-
-
+    #return paginate(templates.TemplateResponse("ho
 
 
 
@@ -537,7 +541,3 @@ async def remove_favorite_stock(stock_id: int):
 # @app.exception_handler(404)
 # async def not_found(request, exc):
 #     return templates.TemplateResponse("404.html", {"request": request}, status_code=404)
-
-
-# Add routes to the app
-app.include_router(router)
