@@ -1,4 +1,5 @@
 from typing import List
+from urllib import request
 from fastapi import FastAPI, Request, Form
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
@@ -12,8 +13,9 @@ from fastapi.responses import RedirectResponse
 # from models.Stock_Price import Stock_Price
 from urllib.parse import quote, unquote
 
-from routes import *
-from routes import router
+
+from .routes import stock_data, popular, intraday, closing, recent, favorites, portfolio
+
 
 
 
@@ -36,7 +38,14 @@ cursor = conn.cursor()
 
 #Routes
 # Routes
-app.include_router(router)
+app.include_router(stock_data.router)
+app.include_router(popular.router)
+app.include_router(intraday.router)
+app.include_router(closing.router)
+app.include_router(recent.router)
+app.include_router(favorites.router)
+app.include_router(portfolio.router)
+                   
 
 
 user_recent_stocks = []
@@ -162,6 +171,16 @@ async def root(request: Request, page: str = '1', searchInput: str = None):  # -
                                                     "searchInput": searchInput, 
                                                     "pages": pages})
     #return paginate(templates.TemplateResponse("ho
+
+
+
+# @app.get("/stock/{symbol}")
+# async def stock_data(request: Request, symbol):
+#     routes.stock_data(request, symbol)
+
+# @app.get("/stock/{symbol1}/{symbol2}")
+# async def stock_data(request: Request, symbol1, symbol2):
+#     routes.stock_data(request, symbol1, symbol2)
 
 
 
