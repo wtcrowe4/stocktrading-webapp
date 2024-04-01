@@ -14,8 +14,8 @@ from fastapi.responses import RedirectResponse
 from urllib.parse import quote, unquote
 
 
-from .routes import stock_data, popular, intraday, closing, recent, favorites, portfolio
-
+# from .routes import stock_data, popular, intraday, closing, recent, favorites, portfolio
+from routes import stock_data, popular, intraday, closing, recent, favorites, portfolio
 
 
 
@@ -38,13 +38,8 @@ cursor = conn.cursor()
 
 #Routes
 # Routes
-app.include_router(stock_data.router)
-app.include_router(popular.router)
-app.include_router(intraday.router)
-app.include_router(closing.router)
-app.include_router(recent.router)
-app.include_router(favorites.router)
-app.include_router(portfolio.router)
+app.router = router
+
                    
 
 
