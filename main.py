@@ -20,6 +20,7 @@ from routes import stock_data, popular, intraday, closing, recent, favorites, po
 
 
 
+
 dotenv.load_dotenv()
 
 db_url = os.getenv('DATABASE_URL')
@@ -37,8 +38,9 @@ conn.row_factory = sqlite3.Row
 cursor = conn.cursor()
 
 #Routes
-# Routes
-app.router = router
+
+app.include_router(stock_data.router)
+
 
                    
 

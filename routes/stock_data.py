@@ -20,7 +20,7 @@ dotenv.load_dotenv()
 db_url = os.getenv('DATABASE_URL')
 
 app = FastAPI()
-router = APIRouter()
+router = APIRouter(tags=['stock_data'])
 app.mount("/assets", StaticFiles(directory="assets"), name="assets")
 templates = Jinja2Templates(directory="templates")
 #add_pagination(app)
@@ -54,7 +54,7 @@ router = APIRouter()
 templates = Jinja2Templates(directory="templates")
 
 @router.get("/stock/{symbol}", response_class=HTMLResponse)
-async def stock_data(request: Request, symbol):
+async def get_stock_data(request: Request, symbol):
     print("url_symbol", symbol)
     symbol = unquote(symbol)
     print(symbol)
@@ -90,7 +90,7 @@ async def stock_data(request: Request, symbol):
 
 
 @router.get("/stock/{symbol}")
-async def stock_data(request: Request, symbol):
+async def get_stock_data(request: Request, symbol):
     print("url_symbol", symbol)
     symbol = unquote(symbol)
     print(symbol)
@@ -165,7 +165,7 @@ async def stock_data(request: Request, symbol):
 
 # Pages for bitcoin assets with a slash in the symbol
 @router.get("/stock/{symbol1}/{symbol2}")
-async def stock_data(request: Request, symbol1, symbol2):
+async def get_stock_data(request: Request, symbol1, symbol2):
     
     symbol = symbol1 + '/' + symbol2
     print(symbol)
