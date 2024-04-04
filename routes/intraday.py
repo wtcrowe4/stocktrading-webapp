@@ -17,6 +17,7 @@ dotenv.load_dotenv()
 db_url = os.getenv('DATABASE_URL')
 
 app = FastAPI()
+router = APIRouter(tags=['intraday'])
 app.mount("/assets", StaticFiles(directory="assets"), name="assets")
 templates = Jinja2Templates(directory="templates")
 #add_pagination(app)
@@ -62,3 +63,5 @@ async def intraday_lows(request: Request):
     rows = cursor.fetchall()
     
     return templates.TemplateResponse("intraday.html", {"request": request, "stocks": rows})
+
+app.include_router(router, tags=['intraday'])
