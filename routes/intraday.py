@@ -31,7 +31,7 @@ cursor = conn.cursor()
 
 
 #Page for Intraday Highs
-@app.get("/intraday_highs")
+@router.get("/intraday_highs")
 async def intraday_highs(request: Request):
     conn = sqlite3.connect(db_url)
     conn.row_factory = sqlite3.Row
@@ -48,7 +48,7 @@ async def intraday_highs(request: Request):
 
 
 #Page for Intraday Lows
-@app.get("/intraday_lows")
+@router.get("/intraday_lows")
 async def intraday_lows(request: Request):
     conn = sqlite3.connect(db_url)
     conn.row_factory = sqlite3.Row
