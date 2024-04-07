@@ -16,8 +16,7 @@ dotenv.load_dotenv()
 
 db_url = os.getenv('DATABASE_URL')
 
-app = FastAPI()
-app.mount("/assets", StaticFiles(directory="assets"), name="assets")
+router = APIRouter(tags=['closing'])
 templates = Jinja2Templates(directory="templates")
 #add_pagination(app)
 
@@ -29,7 +28,7 @@ cursor = conn.cursor()
 
 
 #Page for Closing Highs
-@app.get("/closing_highs")
+@router.get("/closing_highs")
 async def closing_highs(request: Request):
     conn = sqlite3.connect(db_url)
     conn.row_factory = sqlite3.Row
@@ -48,7 +47,7 @@ async def closing_highs(request: Request):
 
 
 # Page for Closing Lows
-@app.get("/closing_lows")
+@router.get("/closing_lows")
 async def closing_lows(request: Request):
     conn = sqlite3.connect(db_url)
     conn.row_factory = sqlite3.Row

@@ -16,8 +16,7 @@ dotenv.load_dotenv()
 
 db_url = os.getenv('DATABASE_URL')
 
-app = FastAPI()
-app.mount("/assets", StaticFiles(directory="assets"), name="assets")
+router = APIRouter(tags=['favorites'])
 templates = Jinja2Templates(directory="templates")
 #add_pagination(app)
 
@@ -49,7 +48,7 @@ for row in rows:
 
 
 #Page for Favorite Stocks
-@app.get("/favorites")
+@router.get("/favorites")
 async def favorite_stocks(request: Request, user_favorite_stocks=user_favorite_stocks):
     #for user favorite stocks array get the stock information and the latest stock prices
     #user_favorite_stocks = list(dict.fromkeys(user_favorite_stocks))

@@ -15,7 +15,7 @@ from urllib.parse import quote, unquote
 
 
 # from .routes import stock_data, popular, intraday, closing, recent, favorites, portfolio
-from routes import stock_data, popular, intraday, closing, recent, favorites, portfolio
+from routes import stock_data_router, popular_router, intraday_router, closing_router, recent_router, favorites_router, portfolio_router
 
 
 
@@ -25,8 +25,15 @@ dotenv.load_dotenv()
 
 db_url = os.getenv('DATABASE_URL')
 
+
 app = FastAPI()
-router = APIRouter()
+app.include_router(stock_data_router)
+app.include_router(popular_router)
+app.include_router(intraday_router)
+app.include_router(closing_router)
+app.include_router(recent_router)
+app.include_router(favorites_router)
+app.include_router(portfolio_router)
 app.mount("/assets", StaticFiles(directory="assets"), name="assets")
 templates = Jinja2Templates(directory="templates")
 #add_pagination(app)
@@ -39,7 +46,9 @@ cursor = conn.cursor()
 
 #Routes
 
-app.include_router(stock_data.router)
+
+
+
 
 
                    
@@ -63,9 +72,6 @@ for row in rows:
     user_recent_stocks.append(stock)
 
 
-
-# Routes
-app.include_router(router)
 
 
 # Home page
@@ -173,11 +179,11 @@ async def root(request: Request, page: str = '1', searchInput: str = None):  # -
 
 # @app.get("/stock/{symbol}")
 # async def stock_data(request: Request, symbol):
-#     routes.stock_data(request, symbol)
+#     router.stock_data(request, symbol)
 
 # @app.get("/stock/{symbol1}/{symbol2}")
 # async def stock_data(request: Request, symbol1, symbol2):
-#     routes.stock_data(request, symbol1, symbol2)
+#     router.stock_data(request, symbol1, symbol2)
 
 
 

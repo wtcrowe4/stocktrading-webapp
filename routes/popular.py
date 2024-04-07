@@ -16,8 +16,7 @@ dotenv.load_dotenv()
 
 db_url = os.getenv('DATABASE_URL')
 
-app = FastAPI()
-app.mount("/assets", StaticFiles(directory="assets"), name="assets")
+router = APIRouter(tags=['popular'])
 templates = Jinja2Templates(directory="templates")
 #add_pagination(app)
 
@@ -31,7 +30,7 @@ cursor = conn.cursor()
 
 
 
-@app.get("/popular")
+@router.get("/popular")
 async def popular_stocks(request: Request):
     conn = sqlite3.connect(db_url)
     conn.row_factory = sqlite3.Row
