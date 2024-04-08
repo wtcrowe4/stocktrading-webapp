@@ -64,7 +64,7 @@ async def recent_stocks(request: Request, user_recent_stocks=user_recent_stocks)
             SELECT stock.*, stock_price.close, stock_price.date, stock_price.volume, stock_price.high, stock_price.low
             FROM stock
             JOIN stock_price ON stock.id = stock_price.stock_id
-            WHERE stock.id IN (?, ?, ?, ?, ?, ?, ?, ?)
+            WHERE stock.id IN (?, ?, ?, ?, ?, ?, ?)
             ORDER BY stock_price.date DESC
         """, user_recent_stock_ids)
         rows = cursor.fetchall()
@@ -74,7 +74,14 @@ async def recent_stocks(request: Request, user_recent_stocks=user_recent_stocks)
             stock_dict = dict(row)
             stock_data.append(stock_dict)
     
-    user_recent_symbols = [stock['symbol'] for stock in user_recent_stocks]
+    
+    user_recent_symbols = []
+    for stock in user_recent_stocks:
+        cursor.execute("SELECT symbol FROM stock WHERE id = ?", (stock,))
+        rows = cursor.fetchall()
+        for row in rows:
+            user_recent_symbols.append(row['symbol'])
+    
     print(user_recent_symbols)
     
     return templates.TemplateResponse("recent.html", {"request": request, "stocks": user_recent_stocks, "stock_data": stock_data, "recent_symbols": user_recent_symbols})
