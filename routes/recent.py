@@ -64,8 +64,10 @@ async def recent_stocks(request: Request, user_recent_stocks=user_recent_stocks)
             SELECT stock.*, stock_price.close, stock_price.date, stock_price.volume, stock_price.high, stock_price.low
             FROM stock
             JOIN stock_price ON stock.id = stock_price.stock_id
+            WHERE stock_price.date = (SELECT MAX(date) FROM stock_price WHERE stock_price.stock_id = stock.id)
             WHERE stock.id IN (?, ?, ?, ?, ?, ?, ?)
-            ORDER BY stock_price.date DESC
+            GROUP BY stock.id
+            ORDER BY stock_price.date 
         """, user_recent_stock_ids)
         rows = cursor.fetchall()
 
@@ -73,6 +75,9 @@ async def recent_stocks(request: Request, user_recent_stocks=user_recent_stocks)
         for row in rows:
             stock_dict = dict(row)
             stock_data.append(stock_dict)
+
+        
+        
     
     
     user_recent_symbols = []
