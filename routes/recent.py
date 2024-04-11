@@ -30,19 +30,27 @@ cursor = conn.cursor()
 # Get Recent/Favorites
 user_recent_stocks = []
 user_favorite_stocks = []
+recents_dict = {}
+favorites_dict = {}
 
 cursor.execute("SELECT * FROM favorite_stock;")
 rows = cursor.fetchall()
 for row in rows:
     user_favorite_stocks.append(row)
+    recents_dict.append(row)
+
 
 cursor.execute("SELECT * FROM recent_stock;")
 rows = cursor.fetchall()
 for row in rows:
     user_recent_stocks.append(row)
+    favorites_dict.append(row)
 
-user_recent_stock_ids = tuple(int(user_recent_stocks['stock_id']))
-user_favorite_stock_ids = tuple(int(user_favorite_stocks['stock_id']))
+
+
+# Get Recent Stock IDs
+user_recent_stock_ids = [stock['stock_id'] for stock in user_recent_stocks]
+user_favorite_stock_ids = [stock['stock_id'] for stock in user_favorite_stocks]
 
 
 
