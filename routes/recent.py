@@ -36,15 +36,15 @@ favorites_dict = {}
 cursor.execute("SELECT * FROM favorite_stock;")
 rows = cursor.fetchall()
 for row in rows:
+    recents_dict = dict(row)
     user_favorite_stocks.append(row)
-    recents_dict.append(row)
-
 
 cursor.execute("SELECT * FROM recent_stock;")
 rows = cursor.fetchall()
 for row in rows:
+    favorites_dict = dict(row)
     user_recent_stocks.append(row)
-    favorites_dict.append(row)
+    
 
 
 
@@ -55,14 +55,82 @@ user_favorite_stock_ids = [stock['stock_id'] for stock in user_favorite_stocks]
 
 
 #Page for Recent Stocks
+# @router.get("/recent")
+# async def recent_stocks(request: Request, user_recent_stocks=user_recent_stocks):
+#     #for user recent stocks array get the stock information and the latest stock prices
+#     #user_recent_stocks = list(dict.fromkeys(user_recent_stocks))    
+#     print(user_recent_stocks)
+#     conn = sqlite3.connect(db_url)
+#     conn.row_factory = sqlite3.Row
+#     cursor = conn.cursor()
+#     stock_data=[]
+    
+#     for stock in user_recent_stock_ids:
+#         cursor.execute("""
+#         SELECT * FROM stock WHERE id = ?
+#         JOIN stock_price ON stock.id = stock_price.stock_id
+#         ORDER BY stock_price.date DESC
+#         LIMIT 1;
+            
+#         """, (stock,))
+#         row = cursor.fetchone()
+#         if row:
+#             stock_dict = dict(row)
+#             stock_data.append(stock_dict)
+        
+#         rows = cursor.fetchall()
+
+#         stock_data = []
+#         for row in rows:
+#             stock_dict = dict(row)
+#             stock_data.append(stock_dict)
+
+        
+        
+    
+    
+#     user_recent_symbols = []
+#     for stock in user_recent_stocks:
+#         cursor.execute("SELECT symbol FROM stock WHERE id = ?", (stock,))
+#         rows = cursor.fetchall()
+#         for row in rows:
+#             user_recent_symbols.append(row['symbol'])
+    
+#     print(user_recent_symbols)
+    
+#     return templates.TemplateResponse("recent.html", {"request": request, "stocks": user_recent_stocks, "stock_data": stock_data, "recent_symbols": user_recent_symbols})
+
 @router.get("/recent")
-async def recent_stocks(request: Request, user_recent_stocks=user_recent_stocks):
-    #for user recent stocks array get the stock information and the latest stock prices
-    #user_recent_stocks = list(dict.fromkeys(user_recent_stocks))    
-    print(user_recent_stocks)
+async def recent_stocks(request: Request):
     conn = sqlite3.connect(db_url)
     conn.row_factory = sqlite3.Row
     cursor = conn.cursor()
+
+    # Get Recent/Favorites
+    user_recent_stocks = []
+    user_favorite_stocks = []
+    recents_dict = {}
+    favorites_dict = {}
+
+    cursor.execute("SELECT * FROM favorite_stock;")
+    rows = cursor.fetchall()
+    for row in rows:
+        recents_dict = dict(row)
+        user_favorite_stocks.append(row)
+
+    cursor.execute("SELECT * FROM recent_stock;")
+    rows = cursor.fetchall()
+    for row in rows:
+        favorites_dict = dict(row)
+        user_recent_stocks.append(row)
+
+    # Get Recent Stock IDs
+    user_recent_stock_ids = [stock['stock_id'] for stock in user_recent_stocks]
+    user_favorite_stock_ids = [stock['stock_id'] for stock in user_favorite_stocks]
+
+    #for user recent stocks array get the stock information and the latest stock prices
+    #user_recent_stocks = list(dict.fromkeys(user_recent_stocks))    
+    print(user_recent_stocks)
     stock_data=[]
     
     for stock in user_recent_stock_ids:
@@ -80,22 +148,4 @@ async def recent_stocks(request: Request, user_recent_stocks=user_recent_stocks)
         
         rows = cursor.fetchall()
 
-        stock_data = []
-        for row in rows:
-            stock_dict = dict(row)
-            stock_data.append(stock_dict)
-
-        
-        
-    
-    
-    user_recent_symbols = []
-    for stock in user_recent_stocks:
-        cursor.execute("SELECT symbol FROM stock WHERE id = ?", (stock,))
-        rows = cursor.fetchall()
-        for row in rows:
-            user_recent_symbols.append(row['symbol'])
-    
-    print(user_recent_symbols)
-    
-    return templates.TemplateResponse("recent.html", {"request": request, "stocks": user_recent_stocks, "stock_data": stock_data, "recent_symbols": user_recent_symbols})
+        return templates.TemplateResponse("recent.html", {"request": request, "stocks": user_recent_stocks, "stock_data": stock_data, "recent_symbols": user_recent_symbols})
