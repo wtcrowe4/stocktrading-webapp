@@ -30,20 +30,31 @@ cursor = conn.cursor()
 # Get Recent/Favorites
 user_recent_stocks = []
 user_favorite_stocks = []
-recents_dict = {}
-favorites_dict = {}
+user_recent_symbols = []
+user_favorite_symbols = []
+recents_dict = []
+favorites_dict = []
 
-cursor.execute("SELECT * FROM favorite_stock;")
-rows = cursor.fetchall()
-for row in rows:
-    recents_dict = dict(row)
-    user_favorite_stocks.append(row)
+# cursor.execute("SELECT * FROM favorite_stock;")
+# rows = cursor.fetchall()
+# for row in rows:
+#     recents_dict = dict(row)
+#     print(recents_dict)
+#     #user_favorite_stocks.append(recents_dict)
+#     #user_favorite_symbols.append(recents_dict['symbol'])
+
 
 cursor.execute("SELECT * FROM recent_stock;")
 rows = cursor.fetchall()
 for row in rows:
-    favorites_dict = dict(row)
-    user_recent_stocks.append(row)
+    # user_recent_stocks.append(row)
+    stock_dict = dict(row)
+
+    favorites_dict.append(stock_dict)
+    print(favorites_dict)
+    #user_recent_stocks.append(favorites_dict)
+    #user_recent_symbols.append(favorites_dict['symbol'])
+
     
 
 
@@ -135,8 +146,9 @@ async def recent_stocks(request: Request):
     
     for stock in user_recent_stock_ids:
         cursor.execute("""
-        SELECT * FROM stock WHERE id = ?
+        SELECT * FROM stock 
         JOIN stock_price ON stock.id = stock_price.stock_id
+        WHERE stock.id = ?
         ORDER BY stock_price.date DESC
         LIMIT 1;
             
@@ -146,6 +158,6 @@ async def recent_stocks(request: Request):
             stock_dict = dict(row)
             stock_data.append(stock_dict)
         
-        rows = cursor.fetchall()
+       
 
         return templates.TemplateResponse("recent.html", {"request": request, "stocks": user_recent_stocks, "stock_data": stock_data, "recent_symbols": user_recent_symbols})
