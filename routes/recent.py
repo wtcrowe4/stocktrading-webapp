@@ -126,13 +126,13 @@ async def recent_stocks(request: Request):
     cursor.execute("SELECT * FROM favorite_stock;")
     rows = cursor.fetchall()
     for row in rows:
-        recents_dict = dict(row)
+        favorites_dict = dict(row)
         user_favorite_stocks.append(row)
 
     cursor.execute("SELECT * FROM recent_stock;")
     rows = cursor.fetchall()
     for row in rows:
-        favorites_dict = dict(row)
+        recents_dict = dict(row)
         user_recent_stocks.append(row)
 
     # Get Recent Stock IDs
