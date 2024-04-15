@@ -139,25 +139,18 @@ async def recent_stocks(request: Request):
     user_recent_stock_ids = [stock['stock_id'] for stock in user_recent_stocks]
     user_favorite_stock_ids = [stock['stock_id'] for stock in user_favorite_stocks]
 
-    #for user recent stocks array get the stock information and the latest stock prices
-    #user_recent_stocks = list(dict.fromkeys(user_recent_stocks))    
-    print(user_recent_stocks)
-    stock_data=[]
-    
-    for stock in user_recent_stock_ids:
+    stock_data = []
+    for stock_id in user_recent_stock_ids:
         cursor.execute("""
         SELECT * FROM stock 
         JOIN stock_price ON stock.id = stock_price.stock_id
         WHERE stock.id = ?
         ORDER BY stock_price.date DESC
         LIMIT 1;
-            
-        """, (stock,))
+        """, (stock_id,))
         row = cursor.fetchone()
         if row:
             stock_dict = dict(row)
             stock_data.append(stock_dict)
-        
-       
 
-        return templates.TemplateResponse("recent.html", {"request": request, "stocks": user_recent_stocks, "stock_data": stock_data, "recent_symbols": user_recent_symbols})
+    return templates.TemplateResponse("recent.html", {"request": request, "stocks": user_recent_stocks, "stock_data": stock_data})
