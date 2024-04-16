@@ -153,4 +153,4 @@ async def recent_stocks(request: Request):
             stock_dict = dict(row)
             stock_data.append(stock_dict)
 
-    return templates.TemplateResponse("recent.html", {"request": request, "stocks": user_recent_stocks, "stock_data": stock_data})
+    return templates.TemplateResponse("recent.html", {"request": request, "stocks": user_recent_stocks, "stock_data": stock_data, "recent_symbols": user_recent_symbols})
