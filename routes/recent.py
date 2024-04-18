@@ -140,12 +140,23 @@ async def recent_stocks(request: Request):
     user_favorite_stock_ids = [stock['stock_id'] for stock in user_favorite_stocks]
 
     print(user_recent_stock_ids)
+    # for id in user_recent_stock_ids:
+    #     cursor.execute('SELECT * FROM stock WHERE id = ?', (id,))
+    #     stock_rows = cursor.fetchall()
+    #     stocks = []
+    #     for row in stock_rows:
+    #         stock_dict = dict(row)
+    #         stocks.append(stock_dict)
+    #     cursor.execute('SELECT symbol FROM stock WHERE id = ?', (id,))
+    #     symbols = cursor.fetchall()
+
+    stocks = []
+    symbols = []
     for id in user_recent_stock_ids:
         cursor.execute('SELECT * FROM stock WHERE id = ?', (id,))
-        stocks = cursor.fetchall()
+        stocks.extend([dict(row) for row in cursor.fetchall()])
         cursor.execute('SELECT symbol FROM stock WHERE id = ?', (id,))
-        symbols = cursor.fetchall()
-
+        symbols.extend([dict(row) for row in cursor.fetchall()])
 
 
     print(stocks[0]['exchange'])
