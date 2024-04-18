@@ -139,6 +139,17 @@ async def recent_stocks(request: Request):
     user_recent_stock_ids = [stock['stock_id'] for stock in user_recent_stocks]
     user_favorite_stock_ids = [stock['stock_id'] for stock in user_favorite_stocks]
 
+    print(user_recent_stock_ids)
+    for id in user_recent_stock_ids:
+        cursor.execute('SELECT * FROM stock WHERE id = ?', (id,))
+        stocks = cursor.fetchall()
+        cursor.execute('SELECT symbol FROM stock WHERE id = ?', (id,))
+        symbols = cursor.fetchall()
+
+
+
+    print(stocks[0]['exchange'])
+
     stock_data = []
     for stock_id in user_recent_stock_ids:
         cursor.execute("""
@@ -149,8 +160,11 @@ async def recent_stocks(request: Request):
         LIMIT 1;
         """, (stock_id,))
         row = cursor.fetchone()
+        
         if row:
             stock_dict = dict(row)
             stock_data.append(stock_dict)
+         
+        
 
-    return templates.TemplateResponse("recent.html", {"request": request, "stocks": user_recent_stocks, "stock_data": stock_data, "recent_symbols": user_recent_symbols})
+    return templates.TemplateResponse("recent.html", {"request": request, "stocks": stocks, "stock_data": stock_data, "recent_symbols": symbols})
