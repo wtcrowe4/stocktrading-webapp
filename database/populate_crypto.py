@@ -55,53 +55,53 @@ client = CryptoHistoricalDataClient()
 request_params = CryptoBarsRequest(
                         symbol_or_symbols=crypto_symbols,
                         timeframe=TimeFrame.Day,
-                        start="2024-03-01T00:00:00Z",
-                        end="2024-03-02T00:00:00Z"
+                        start="2024-03-03T00:00:00Z",
+                        end="2024-04-01T00:00:00Z"
                         )
 
 bitcoin_bars = client.get_crypto_bars(request_params).df
 print(bitcoin_bars)
 
 #Convert data to store in database table stock_price
-# for symbol in crypto_symbols:
-#     bars = bitcoin_bars.loc[symbol]
-#     for index, row in bars.iterrows():
-#         print(index, row)
-#         day_timestamp_str = index.strftime('%Y-%m-%d')
-#         cursor.execute('''
-#                         INSERT INTO stock_price (stock_id, date, timestamp, open, high, low, close, volume)
-#                         VALUES ((SELECT id FROM stock WHERE symbol = ?), ?, ?, ?, ?, ?, ?, ?)
-#                         ''', (symbol, day_timestamp_str, str(index), row['open'], row['high'], row['low'], row['close'], row['volume']))
+for symbol in crypto_symbols:
+    bars = bitcoin_bars.loc[symbol]
+    for index, row in bars.iterrows():
+        print(index, row)
+        day_timestamp_str = index.strftime('%Y-%m-%d')
+        cursor.execute('''
+                        INSERT INTO stock_price (stock_id, date, timestamp, open, high, low, close, volume)
+                        VALUES ((SELECT id FROM stock WHERE symbol = ?), ?, ?, ?, ?, ?, ?, ?)
+                        ''', (symbol, day_timestamp_str, str(index), row['open'], row['high'], row['low'], row['close'], row['volume']))
         
 
 # Add tables for favorite and recent stocks to database
-cursor.execute('''
-                CREATE TABLE favorite_stock (
-                    id INTEGER PRIMARY KEY,
-                    stock_id INTEGER,
-                    FOREIGN KEY(stock_id) REFERENCES stock(id)
-                )
-                ''')
+# cursor.execute('''
+#                 CREATE TABLE favorite_stock (
+#                     id INTEGER PRIMARY KEY,
+#                     stock_id INTEGER,
+#                     FOREIGN KEY(stock_id) REFERENCES stock(id)
+#                 )
+#                 ''')
 
-cursor.execute('''
-                CREATE TABLE recent_stock (
-                    id INTEGER PRIMARY KEY,
-                    stock_id INTEGER,
-                    FOREIGN KEY(stock_id) REFERENCES stock(id)
-                )
-                ''')
+# cursor.execute('''
+#                 CREATE TABLE recent_stock (
+#                     id INTEGER PRIMARY KEY,
+#                     stock_id INTEGER,
+#                     FOREIGN KEY(stock_id) REFERENCES stock(id)
+#                 )
+#                 ''')
 
 
 #10966, 377, 5007, 5553, 6380, 105, 9312, 6562
-cursor.execute('''
-                INSERT INTO favorite_stock (stock_id)
-                VALUES (10966), (377), (5007), (5553), (6380), (105), (9312), (6562)
-                ''')
+# cursor.execute('''
+#                 INSERT INTO favorite_stock (stock_id)
+#                 VALUES (10966), (377), (5007), (5553), (6380), (105), (9312), (6562)
+#                 ''')
 
-cursor.execute('''
-                INSERT INTO recent_stock (stock_id)
-                VALUES (10966), (377), (5007), (5553), (6380), (105), (9312)
-                ''')
+# cursor.execute('''
+#                 INSERT INTO recent_stock (stock_id)
+#                 VALUES (10966), (377), (5007), (5553), (6380), (105), (9312)
+#                 ''')
 
 
 
