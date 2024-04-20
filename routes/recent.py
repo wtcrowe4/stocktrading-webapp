@@ -27,38 +27,15 @@ cursor = conn.cursor()
 
 # Get Recent/Favorites
 user_recent_stocks = []
-user_favorite_stocks = []
 user_recent_symbols = []
-user_favorite_symbols = []
 recents_dict = []
-favorites_dict = []
 
 
 # Get Recent Stock IDs
 user_recent_stock_ids = [stock['stock_id'] for stock in user_recent_stocks]
-user_favorite_stock_ids = [stock['stock_id'] for stock in user_favorite_stocks]
-
-
-
 
 @router.get("/recent")
 async def recent_stocks(request: Request):
-    conn = sqlite3.connect(db_url)
-    conn.row_factory = sqlite3.Row
-    cursor = conn.cursor()
-
-    # Get Recent/Favorites
-    user_recent_stocks = []
-    user_favorite_stocks = []
-    recents_dict = {}
-    favorites_dict = {}
-
-    cursor.execute("SELECT * FROM favorite_stock;")
-    rows = cursor.fetchall()
-    for row in rows:
-        favorites_dict = dict(row)
-        user_favorite_stocks.append(row)
-
     cursor.execute("SELECT * FROM recent_stock;")
     rows = cursor.fetchall()
     for row in rows:
@@ -67,8 +44,7 @@ async def recent_stocks(request: Request):
 
     # Get Recent Stock IDs
     user_recent_stock_ids = [stock['stock_id'] for stock in user_recent_stocks]
-    user_favorite_stock_ids = [stock['stock_id'] for stock in user_favorite_stocks]
-
+    
     stocks = []
     symbols = []
     for id in user_recent_stock_ids:
