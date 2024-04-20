@@ -7,6 +7,7 @@
     <!--close ui container-->
     </div>
         <div style="display: flex; justify-content: center; align-items: center; height: 70vh; width: 90vw; margin: auto;">
+
         <!-- TradingView Widget BEGIN -->
         <div class="tradingview-widget-container" style="height:100%;width:100%">
             <div class="tradingview-widget-container__widget" style="height:calc(100% - 32px);width:100%"></div>
@@ -28,8 +29,6 @@
                 "watchlist":  {{ favorite_symbols | tojson | safe }}
             }
             </script>
-             
-            
             </div>
         <!-- TradingView Widget END -->
         </div>
