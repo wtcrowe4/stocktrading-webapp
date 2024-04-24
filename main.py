@@ -35,6 +35,7 @@ app.include_router(recent_router)
 app.include_router(favorites_router)
 app.include_router(portfolio_router)
 app.mount("/assets", StaticFiles(directory="assets"), name="assets")
+app.mount("/styles", StaticFiles(directory="styles"), name="styles")
 templates = Jinja2Templates(directory="templates")
 #add_pagination(app)
 

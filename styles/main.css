@@ -1,0 +1,10 @@
+home-widgets {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+trading-view-widget-container {
+    display: flex;
+}
