@@ -74,9 +74,14 @@ for row in rows:
 
 
 
+# Splash page
+@app.get("/")
+async def root(request: Request):
+    return templates.TemplateResponse("splash.html", {"request": request})
 
-# Home page
-@app.get("/")   #, response_model=Page[StockData]
+
+# All page
+@app.get("/all")   #, response_model=Page[StockData]
 async def root(request: Request, page: str = '1', searchInput: str = None):  # -> Page[StockData]
     
     # Pagination
@@ -132,7 +137,7 @@ async def root(request: Request, page: str = '1', searchInput: str = None):  # -
             stocks.append(stock)
           
         
-        return templates.TemplateResponse("home.html", {"request": request, "stocks": stocks, "searchInput": searchInput, "pages": pages})
+        return templates.TemplateResponse("all.html", {"request": request, "stocks": stocks, "searchInput": searchInput, "pages": pages})
 
             
     
@@ -170,7 +175,7 @@ async def root(request: Request, page: str = '1', searchInput: str = None):  # -
 
     pages = cursor.execute("SELECT COUNT(*) FROM stock").fetchone()[0] // 50
 
-    return templates.TemplateResponse("home.html", {"request": request, 
+    return templates.TemplateResponse("all.html", {"request": request, 
                                                     "stocks": stocks, 
                                                     "searchInput": searchInput, 
                                                     "pages": pages})

@@ -2,9 +2,11 @@
 {% block content %}
     <!-- <h1 class="ui center aligned huge white header" style="color:white;font-size: 4rem;">Stocks</h1> -->
     <div class="ui divider"></div>
-    <div class="flex" id="home-widgets">
+
+    <!-- Moved widgets to splash page-->
+    <!-- <div class="flex" id="home-widgets"> -->
     <!-- TradingView Widget BEGIN -->
-        <div class="tradingview-widget-container">
+        <!-- <div class="tradingview-widget-container">
             <div class="tradingview-widget-container__widget"></div>
             <div class="tradingview-widget-copyright"><a href="https://www.tradingview.com/" rel="noopener nofollow" target="_blank"><span class="blue-text">Track all markets on TradingView</span></a></div>
             <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-market-overview.js" async>
@@ -148,11 +150,11 @@
             ]
         }
             </script>
-        </div>
+        </div> -->
   <!-- TradingView Widget END -->
 
 <!-- TradingView Widget BEGIN -->
-       <div class="tradingview-widget-container">
+       <!-- <div class="tradingview-widget-container">
             <div class="tradingview-widget-container__widget"></div>
             <div class="tradingview-widget-copyright"><a href="https://www.tradingview.com/" rel="noopener nofollow" target="_blank"><span class="blue-text">Track all markets on TradingView</span></a></div>
             <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-timeline.js" async>
@@ -166,11 +168,11 @@
             "locale": "en"
         }
             </script>
-        </div>
+        </div> -->
         <!-- TradingView Widget END -->
     
         <!-- TradingView Widget BEGIN -->
-        <div class="tradingview-widget-container">
+        <!-- <div class="tradingview-widget-container">
             <div class="tradingview-widget-container__widget"></div>
             <div class="tradingview-widget-copyright"><a href="https://www.tradingview.com/" rel="noopener nofollow" target="_blank"><span class="blue-text">Track all markets on TradingView</span></a></div>
             <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-screener.js" async>
@@ -185,12 +187,12 @@
             "locale": "en"
         }
             </script>
-        </div>
+        </div> -->
   <!-- TradingView Widget END -->
 
 
         <!-- TradingView Widget BEGIN -->
-                <div class="tradingview-widget-container">
+                <!-- <div class="tradingview-widget-container">
                     <div class="tradingview-widget-container__widget"></div>
                     <div class="tradingview-widget-copyright"><a href="https://www.tradingview.com/" rel="noopener nofollow" target="_blank"><span class="blue-text">Track all markets on TradingView</span></a></div>
                     <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-stock-heatmap.js" async>
@@ -211,11 +213,13 @@
                         "height": "50%"
                     }
                     </script>
-                </div>
+                </div> -->
 <!-- TradingView Widget END -->
-    </div>
     
     
+    <!--End Widgets -->
+
+
     <form action="/?search={{ searchInput }}" method="get">
        <div class="ui fluid icon big input">
             <input type="text" placeholder="Search stocks..." id="searchInput" name="searchInput">
