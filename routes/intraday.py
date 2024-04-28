@@ -44,7 +44,8 @@ async def intraday_highs(request: Request):
         LIMIT 50
     """)
     rows = cursor.fetchall()
-    return templates.TemplateResponse("intraday.html", {"request": request, "stocks": rows})
+    header_title = "Intraday Highs"
+    return templates.TemplateResponse("intraday.html", {"request": request, "stocks": rows, "header_txt": header_title})
 
 
 #Page for Intraday Lows
@@ -61,7 +62,7 @@ async def intraday_lows(request: Request):
         LIMIT 50
     """)
     rows = cursor.fetchall()
-    
-    return templates.TemplateResponse("intraday.html", {"request": request, "stocks": rows})
+    header_title = "Intraday Lows"
+    return templates.TemplateResponse("intraday.html", {"request": request, "stocks": rows, "header_txt": header_title})
 
 app.include_router(router, tags=['intraday'])
