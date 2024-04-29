@@ -70,3 +70,6 @@ async def portfolio(request: Request):
         portfolio_list.append(portfolio_dict)
 
     print(portfolio_list)
+
+
+    return templates.TemplateResponse("portfolio.html", {"request": request, "portfolio": portfolio_list})
