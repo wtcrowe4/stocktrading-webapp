@@ -44,7 +44,12 @@ async def recent_stocks(request: Request):
 
     # Get Recent Stock IDs
     user_recent_stock_ids = [stock['stock_id'] for stock in user_recent_stocks]
-    
+    print(user_recent_stock_ids)
+
+    # Drop duplicates
+    user_recent_stock_ids = list(set(user_recent_stock_ids))
+    print(user_recent_stock_ids)
+
     stocks = []
     symbols = []
     for id in user_recent_stock_ids:
@@ -69,6 +74,6 @@ async def recent_stocks(request: Request):
             stock_dict = dict(row)
             stock_data.append(stock_dict)
          
-        
+    print(symbols)    
 
     return templates.TemplateResponse("recent.html", {"request": request, "stocks": stocks, "stock_data": stock_data, "recent_symbols": symbols})
