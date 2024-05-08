@@ -17,28 +17,6 @@ conn = sqlite3.connect(db_url)
 
 cursor = conn.cursor()
 
-# api = tradeapi.REST(alpaca_api_key, alpaca_api_secret, base_url=alpaca_base_url)
-# #testing
-# #problem with symbol 'AAVE/USD'
-# start_date = '2024-01-01'
-# end_date = '2024-02-14'
-
-# slash_assets = cursor.execute('SELECT symbol FROM stock WHERE symbol LIKE "%/%"').fetchall()
-# print(slash_assets)
-
-# for asset in slash_assets:
-#     symbol = asset[0]
-#     symbol = symbol.replace('/', '')
-#     print(symbol)
-#     bars = api.get_bars([symbol], TimeFrame.Day, start_date, end_date).df
-#     print(bars)
-    
-
-
-# asset = api.get_asset('BATUSD')
-# testbars = api.get_bars(['BATUSD'], TimeFrame.Day, start_date, end_date).df
-# print(asset)
-# print(testbars)
 
 # Crytpo data
 from alpaca.data.historical import CryptoHistoricalDataClient
@@ -73,37 +51,6 @@ for symbol in crypto_symbols:
                         VALUES ((SELECT id FROM stock WHERE symbol = ?), ?, ?, ?, ?, ?, ?, ?)
                         ''', (symbol, day_timestamp_str, str(index), row['open'], row['high'], row['low'], row['close'], row['volume']))
         
-
-# Add tables for favorite and recent stocks to database
-# cursor.execute('''
-#                 CREATE TABLE favorite_stock (
-#                     id INTEGER PRIMARY KEY,
-#                     stock_id INTEGER,
-#                     FOREIGN KEY(stock_id) REFERENCES stock(id)
-#                 )
-#                 ''')
-
-# cursor.execute('''
-#                 CREATE TABLE recent_stock (
-#                     id INTEGER PRIMARY KEY,
-#                     stock_id INTEGER,
-#                     FOREIGN KEY(stock_id) REFERENCES stock(id)
-#                 )
-#                 ''')
-
-
-#10966, 377, 5007, 5553, 6380, 105, 9312, 6562
-# cursor.execute('''
-#                 INSERT INTO favorite_stock (stock_id)
-#                 VALUES (10966), (377), (5007), (5553), (6380), (105), (9312), (6562)
-#                 ''')
-
-# cursor.execute('''
-#                 INSERT INTO recent_stock (stock_id)
-#                 VALUES (10966), (377), (5007), (5553), (6380), (105), (9312)
-#                 ''')
-
-
 
 
 conn.commit()
