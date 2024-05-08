@@ -47,7 +47,6 @@ for asset in assets:
 #print(timestamp)                
 
 
-
 #chunking and getting all daily data for last week
 chunk_size = 100
 start_date = '2024-04-19'
@@ -78,40 +77,6 @@ for i in range(0, len(symbols), chunk_size):
     except Exception as e:
         print(f'Error occurred while getting bars: {e}')
 
-
-
-
-
-
-
-
-# for bar in bars_db:
-#     print(f'Processing symbol {bar.S} for date {bar.t.date()}')
-#     cursor.execute('SELECT id FROM stock WHERE symbol=?', (bar.S,))
-#     stock_id = cursor.fetchone()[0]
-
-#     #check if the stock price is already in the db
-#     timestamp_str = bar.t.strftime('%H:%M:%S')
-#     cursor.execute('SELECT id FROM stock_price WHERE stock_id=? AND date=?', (stock_id, bar.t.date()))
-#     stock_price_id = cursor.fetchone()
-#     if stock_price_id:
-#         print('Stock price already exists')
-#     else:
-#         cursor.execute('INSERT INTO stock_price (stock_id, date, timestamp, open, high, low, close, volume) VALUES (?, ?, ?, ?, ?, ?, ?, ?)', 
-#         (stock_id, bar.t.date(), timestamp_str, bar.o, bar.h, bar.l, bar.c, bar.v))
-
-
-
-
-
-
-#get minute data
-#min_bars = api.get_bars('MSFT', TimeFrame.Minute, '2024-01-18', '2024-01-19', adjustment='raw').df
-#print(min_bars)
-
-# data_api = tradeapi.REST(alpaca_api_key, alpaca_api_secret, base_url=alpaca_data_url)
-# min_bars = data_api.get_latest_bars('MSFT')
-# print(min_bars)
 
 
 conn.commit()
