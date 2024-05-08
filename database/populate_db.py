@@ -46,15 +46,12 @@ for asset in assets:
 #timestamp = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 #print(timestamp)                
 
-#populating db with stock price daily historical data
-#bars_db = api.get_bars(['AAPL', 'MSFT'], TimeFrame.Day, '2023-01-01', '2023-01-20')
-#bars_df = api.get_bars(['AAPL', 'MSFT'], TimeFrame.Day, '2023-01-01', '2023-01-20', adjustment='raw').df
-#print(bars_df)
+
 
 #chunking and getting all daily data for last week
 chunk_size = 100
-start_date = '2024-04-01'
-end_date = '2024-04-19'
+start_date = '2024-04-19'
+end_date = '2024-05-01'
 
 
 for i in range(0, len(symbols), chunk_size):
