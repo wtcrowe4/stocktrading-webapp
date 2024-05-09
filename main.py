@@ -352,15 +352,15 @@ async def remove_favorite_stock(stock_id: int):
 
 
 # #Route for strategies
-# @app.post("/add_strategy/{stock_id}")
-# async def add_strategy(request: Request, stock_id: int, strategy: int = Form(...)):
-#     conn = sqlite3.connect(db_url)
-#     cursor = conn.cursor()
-#     cursor.execute("INSERT INTO stock_strategy (stock_id, strategy_id) VALUES (?, ?)", (stock_id, strategy))
-#     conn.commit()
-#     stock_symbol = sqlite3.connect(db_url).cursor().execute("SELECT symbol FROM stock WHERE id=?", (stock_id,)).fetchone()[0]
-#     print("Added strategy", strategy, "to stock", stock_id)
-#     return RedirectResponse(url=f"/portfolio", status_code=303)
+@app.post("/add_strategy/{stock_id}")
+async def add_strategy(request: Request, stock_id: int, strategy: int = Form(...)):
+    conn = sqlite3.connect(db_url)
+    cursor = conn.cursor()
+    cursor.execute("INSERT INTO stock_strategy (stock_id, strategy_id) VALUES (?, ?)", (stock_id, strategy))
+    conn.commit()
+    stock_symbol = sqlite3.connect(db_url).cursor().execute("SELECT symbol FROM stock WHERE id=?", (stock_id,)).fetchone()[0]
+    print("Added strategy", strategy, "to stock", stock_id)
+    return RedirectResponse(url=f"/portfolio", status_code=303)
     
 
 
