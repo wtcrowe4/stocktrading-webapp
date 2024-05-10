@@ -17,14 +17,9 @@ from urllib.parse import quote, unquote
 # from .routes import stock_data, popular, intraday, closing, recent, favorites, portfolio
 from routes import stock_data_router, popular_router, intraday_router, closing_router, recent_router, favorites_router, portfolio_router
 
-
-
-
-
 dotenv.load_dotenv()
 
 db_url = os.getenv('DATABASE_URL')
-
 
 app = FastAPI()
 app.include_router(stock_data_router)
@@ -44,16 +39,6 @@ templates = Jinja2Templates(directory="templates")
 conn = sqlite3.connect(db_url)
 conn.row_factory = sqlite3.Row  
 cursor = conn.cursor()
-
-#Routes
-
-
-
-
-
-
-                   
-
 
 user_recent_stocks = []
 user_favorite_stocks = []
@@ -365,64 +350,7 @@ async def add_strategy(request: Request, stock_id: int, strategy: int = Form(...
 
 
 
-# #Page for Popular Stocks
-# @app.get("/popular")
-# async def popular_stocks(request: Request):
-#     conn = sqlite3.connect(db_url)
-#     conn.row_factory = sqlite3.Row
-#     cursor = conn.cursor()
-#     cursor.execute("""
-#         SELECT symbol, name, date, volume, url_symbol
-#         FROM stock JOIN stock_price ON stock.id = stock_price.stock_id
-#         GROUP BY volume
-#         ORDER BY volume DESC
-#         LIMIT 50
-#     """)
-#     rows = cursor.fetchall()
 
-#     # Add a url_symbol key to each stock dictionary
-#     stocks=[]
-#     for stock in rows:
-#         stock = dict(stock)
-#         #stock['url_symbol'] = quote(stock['symbol'], safe='')
-#         stocks.append(stock)
-        
-
-    
-#     return templates.TemplateResponse("popular.html", {"request": request, "stocks": stocks})
-
-# #Page for Recent Stocks
-# @app.get("/recent")
-# async def recent_stocks(request: Request, user_recent_stocks=user_recent_stocks):
-#     #for user recent stocks array get the stock information and the latest stock prices
-#     #user_recent_stocks = list(dict.fromkeys(user_recent_stocks))    
-#     print(user_recent_stocks)
-#     conn = sqlite3.connect(db_url)
-#     conn.row_factory = sqlite3.Row
-#     cursor = conn.cursor()
-#     stock_data=[]
-    
-#     for stock in user_recent_stocks:
-#         print(stock)
-        
-#         cursor.execute("""
-#             SELECT stock.*, stock_price.close, stock_price.date, stock_price.volume, stock_price.high, stock_price.low
-#             FROM stock
-#             JOIN stock_price ON stock.id = stock_price.stock_id
-#             WHERE stock.id IN (?, ?, ?, ?, ?, ?, ?, ?)
-#             ORDER BY stock_price.date DESC
-#         """, user_recent_stock_ids)
-#         rows = cursor.fetchall()
-
-#         stock_data = []
-#         for row in rows:
-#             stock_dict = dict(row)
-#             stock_data.append(stock_dict)
-    
-#     user_recent_symbols = [stock['symbol'] for stock in user_recent_stocks]
-#     print(user_recent_symbols)
-    
-#     return templates.TemplateResponse("recent.html", {"request": request, "stocks": user_recent_stocks, "stock_data": stock_data, "recent_symbols": user_recent_symbols})
 
 
 # #Page for Favorite Stocks
@@ -566,6 +494,6 @@ async def add_strategy(request: Request, stock_id: int, strategy: int = Form(...
 
 
 # # Page for 404 not found errors
-# @app.exception_handler(404)
-# async def not_found(request, exc):
-#     return templates.TemplateResponse("404.html", {"request": request}, status_code=404)
+@app.exception_handler(404)
+async def not_found(request, exc):
+    return templates.TemplateResponse("404.html", {"request": request}, status_code=404)
