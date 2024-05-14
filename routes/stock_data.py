@@ -65,7 +65,7 @@ async def get_stock_data(request: Request, symbol):
     cursor.execute("SELECT * FROM stock WHERE symbol=?", (symbol,))
     row = cursor.fetchone()
     print(row['id'])
-    cursor.execute("SELECT * FROM stock_price WHERE stock_id=? ORDER BY date DESC", (row['id'],))
+    cursor.execute("SELECT * FROM stock_price WHERE stock_id=? ORDER BY date DESC LIMIT 25", (row['id'],))
     prices = cursor.fetchall()
     
     # recently visited stocks
@@ -212,7 +212,7 @@ async def get_stock_data(request: Request, symbol1, symbol2):
     cursor.execute("SELECT * FROM stock WHERE symbol=?", (symbol,))
     row = cursor.fetchone()
     print(row['id'])
-    cursor.execute("SELECT * FROM stock_price WHERE stock_id=? ORDER BY date DESC", (row['id'],))
+    cursor.execute("SELECT * FROM stock_price WHERE stock_id=? ORDER BY date DESC LIMIT 25", (row['id'],))
     prices = cursor.fetchall()
     
     #recently visited stocks
