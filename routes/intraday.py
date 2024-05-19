@@ -37,7 +37,7 @@ async def intraday_highs(request: Request):
     conn.row_factory = sqlite3.Row
     cursor = conn.cursor()
     cursor.execute("""
-        SELECT symbol, name, date, high
+        SELECT symbol, exchange, name, date, high
         FROM stock JOIN stock_price ON stock.id = stock_price.stock_id
         WHERE date = (SELECT MAX(date) FROM stock_price)
         ORDER BY high DESC
@@ -55,7 +55,7 @@ async def intraday_lows(request: Request):
     conn.row_factory = sqlite3.Row
     cursor = conn.cursor()
     cursor.execute("""
-        SELECT symbol, name, date, low
+        SELECT symbol, exchange, name, date, low
         FROM stock JOIN stock_price ON stock.id = stock_price.stock_id
         WHERE date = (SELECT MAX(date) FROM stock_price)
         ORDER BY low ASC
