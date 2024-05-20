@@ -3,6 +3,50 @@
     
     <h1 class="ui white center aligned huge header"  style="color:white;">Closing Data</h1>
     <h2 class="ui white center aligned header"  style="color:white;">{{ header_txt }}</h2>
+
+     <!-- TradingView Widget BEGIN -->
+     <div class="tradingview-widget-container">
+        <div class="tradingview-widget-container__widget"></div>
+        <div class="tradingview-widget-copyright"><a href="https://www.tradingview.com/" rel="noopener nofollow" target="_blank"><span class="blue-text">Track all markets on TradingView</span></a></div>
+        <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-market-quotes.js" async>
+        {
+        "width": "100%",
+        "height": "500",
+        "symbolsGroups": [
+        {
+            "name": "Stocks",
+            "symbols": [
+                
+                {
+                    "name": "{{ stocks[0].exchange }}:{{stocks[0].symbol }}",
+                    "displayName": "{{ stocks[0].name }}"
+                },
+                {
+                    "name": "{{ stocks[1].exchange }}:{{stocks[1].symbol }}",
+                    "displayName": "{{ stocks[1].name }}"
+                },
+                {
+                    "name": "{{ stocks[2].exchange }}:{{stocks[2].symbol }}",
+                    "displayName": "{{ stocks[2].name }}"
+                },
+                {
+                    "name": "{{ stocks[3].exchange }}:{{stocks[3].symbol }}",
+                    "displayName": "{{ stocks[3].name }}"
+                }
+                
+            ]
+        }
+        ],
+        "showSymbolLogo": true,
+        "isTransparent": false,
+        "colorTheme": "dark",
+        "locale": "en",
+        "backgroundColor": "#131722"
+    }
+        </script>
+    </div>
+    <!-- TradingView Widget END -->
+    
     <div class="ui divider"></div>
     <table class="ui selectable inverted table">
         <thead>
