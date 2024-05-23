@@ -2,8 +2,44 @@
 {% block content %}
 
 <h1 class="ui huge header center aligned" style="color: white;">My Portfolio</h1>
+<h2 class="ui header center aligned" style="color: white;">{{ portfolio[0].exchange }} {{ portfolio[0].symbol }}</h2>
 <div class="ui divider"></div>
 
+<!-- TradingView Widget BEGIN -->
+<div class="tradingview-widget-container">
+    <div class="tradingview-widget-container__widget"></div>
+    <div class="tradingview-widget-copyright"><a href="https://www.tradingview.com/" rel="noopener nofollow" target="_blank"><span class="blue-text">Track all markets on TradingView</span></a></div>
+    <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-market-quotes.js" async>
+    {
+    "width": "100%",
+    "height": "500",
+    "symbolsGroups": [
+      {
+        "name": "Vested Stocks",
+        "symbols": [
+          {
+            "name": "{{ portfolio[0].exchange }}:{{ portfolio[0].symbol }}"
+          },
+          {
+            "name": "{{ portfolio[1].exchange }}:{{ portfolio[1].symbol }}"
+          },
+          {
+            "name": "{{ portfolio[2].exchange }}:{{ portfolio[2].symbol }}"
+          }
+        ]
+      }
+    ],
+    "showSymbolLogo": true,
+    "isTransparent": false,
+    "colorTheme": "dark",
+    "locale": "en",
+    "backgroundColor": "#131722"
+  }
+    </script>
+  </div>
+  <!-- TradingView Widget END -->
+
+<div class="ui divider"></div>
 <table class="ui selectable inverted table">
     <thead>
         <tr>
