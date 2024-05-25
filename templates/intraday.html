@@ -4,6 +4,7 @@
 <h1 class="ui white center aligned huge header"  style="color:white;">Intraday Data</h1>
 <h2 class="ui white center aligned header"  style="color:white;">{{ header_txt }}</h2>
     <div class="ui divider"></div>
+    <h2 class="ui white center aligned header"  style="color:white;">{{ stocks[0].symbol }}</h2>
 
     <!-- TradingView Widget BEGIN -->
         <div class="tradingview-widget-container">
@@ -18,10 +19,6 @@
                 "name": "Stocks",
                 "symbols":[
                         
-                        {
-                            "name": "{{ stocks[0].exchange }}:{{stocks[0].symbol }}",
-                            "displayName": "{{ stocks[0].name }}"
-                        },
                         {
                             "name": "{{ stocks[1].exchange }}:{{stocks[1].symbol }}",
                             "displayName": "{{ stocks[1].name }}"
@@ -54,50 +51,8 @@
                             "name": "{{ stocks[8].exchange }}:{{stocks[8].symbol }}",
                             "displayName": "{{ stocks[8].name }}"
                         },
-                        {
-                            "name": "{{ stocks[9].exchange }}:{{stocks[9].symbol }}",
-                            "displayName": "{{ stocks[9].name }}"
-                        },
-                        {
-                            "name": "{{ stocks[10].exchange }}:{{stocks[10].symbol }}",
-                            "displayName": "{{ stocks[10].name }}"
-                        },
-                        {
-                            "name": "{{ stocks[11].exchange }}:{{stocks[11].symbol }}",
-                            "displayName": "{{ stocks[11].name }}"
-                        },
-                        {
-                            "name": "{{ stocks[12].exchange }}:{{stocks[12].symbol }}",
-                            "displayName": "{{ stocks[12].name }}"
-                        },
-                        {
-                            "name": "{{ stocks[13].exchange }}:{{stocks[13].symbol }}",
-                            "displayName": "{{ stocks[13].name }}"
-                        },
-                        {
-                            "name": "{{ stocks[14].exchange }}:{{stocks[14].symbol }}",
-                            "displayName": "{{ stocks[14].name }}"
-                        },
-                        {
-                            "name": "{{ stocks[15].exchange }}:{{stocks[15].symbol }}",
-                            "displayName": "{{ stocks[15].name }}"
-                        },
-                        {
-                            "name": "{{ stocks[16].exchange }}:{{stocks[16].symbol }}",
-                            "displayName": "{{ stocks[16].name }}"
-                        },
-                        {
-                            "name": "{{ stocks[17].exchange }}:{{stocks[17].symbol }}",
-                            "displayName": "{{ stocks[17].name }}"
-                        },
-                        {
-                            "name": "{{ stocks[18].exchange }}:{{stocks[18].symbol }}",
-                            "displayName": "{{ stocks[18].name }}"
-                        },
-                        {
-                            "name": "{{ stocks[19].exchange }}:{{stocks[19].symbol }}",
-                            "displayName": "{{ stocks[19].name }}"
-                        },
+                      
+                        
                     ]
              
                 }
