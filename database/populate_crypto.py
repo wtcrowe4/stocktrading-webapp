@@ -33,8 +33,8 @@ client = CryptoHistoricalDataClient()
 request_params = CryptoBarsRequest(
                         symbol_or_symbols=crypto_symbols,
                         timeframe=TimeFrame.Day,
-                        start="2024-04-19T00:00:00Z",
-                        end="2024-05-01T00:00:00Z"
+                        start="2024-05-01T00:00:00Z",
+                        end="2024-06-01T00:00:00Z"
                         )
 
 bitcoin_bars = client.get_crypto_bars(request_params).df
