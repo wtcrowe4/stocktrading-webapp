@@ -51,6 +51,7 @@ cursor.execute('''
 cursor.execute('''
     CREATE TABLE IF NOT EXISTS stock_strategy (
         id INTEGER PRIMARY KEY,
+        start_date NOT NULL,
         stock_id INTEGER,
         strategy_id INTEGER,
         FOREIGN KEY (stock_id) REFERENCES stock (id),
