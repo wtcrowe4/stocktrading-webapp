@@ -55,10 +55,10 @@ async def intraday_lows(request: Request):
     conn.row_factory = sqlite3.Row
     cursor = conn.cursor()
     cursor.execute("""
-        SELECT symbol, exchange, name, date, low
+        SELECT symbol, exchange, name, date, low, (low - (SELECT MIN(low) FROM stock_price)) AS decrease
         FROM stock JOIN stock_price ON stock.id = stock_price.stock_id
         WHERE date = (SELECT MAX(date) FROM stock_price)
-        ORDER BY low ASC
+        ORDER BY decrease ASC
         LIMIT 50
     """)
     rows = cursor.fetchall()
