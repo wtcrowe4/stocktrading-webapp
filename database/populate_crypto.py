@@ -34,7 +34,7 @@ request_params = CryptoBarsRequest(
                         symbol_or_symbols=crypto_symbols,
                         timeframe=TimeFrame.Day,
                         start="2024-06-14T00:00:00Z",
-                        end="2024-06-17T00:00:00Z"
+                        end="2024-06-20T00:00:00Z"
                         )
 
 bitcoin_bars = client.get_crypto_bars(request_params).df
