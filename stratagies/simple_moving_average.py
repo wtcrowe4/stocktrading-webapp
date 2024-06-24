@@ -51,5 +51,33 @@ fifteen_min_bar = f"{str(current_date_str)} 08:15:00+00:00"
 for stock in stocks:
     minute_bars = api.get_bars(stock[0], '1Min', start=current_date_str, end=current_date_str).df
     print(stock)
+    print(minute_bars)
+    if len(minute_bars) == 0:
+        continue
+    if minute_bars.index[0] < opening_min_bar:
+        continue
+    if minute_bars.index[0] > fifteen_min_bar:
+        continue
+    if stock[0] in ordered_symbols:
+        continue
+    if minute_bars['close'].iloc[0] > minute_bars['SMA_20'].iloc[0]:
+        paper_api.submit_order(
+            symbol=stock[0],
+            qty=1,
+            side='buy',
+            type='market',
+            time_in_force='gtc'
+        )
+    else:
+        paper_api.submit_order(
+            symbol=stock[0],
+            qty=1,
+            side='sell',
+            type='market',
+            time_in_force='gtc'
+        )
+    print(f"Order submitted for {stock[0]}")
+conn.close()
+
     
     
