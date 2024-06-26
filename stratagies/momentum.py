@@ -46,3 +46,27 @@ stocks = cursor.fetchall()
 current_date = dt.date.today().isoformat()
 current_date_str = current_date.tostirng()
 
+for stock in stocks:
+    symbol = stock[0]
+    name = stock[1]
+
+    # Get the historical data for the stock
+    historical_data = api.get_barset(symbol, 'day', limit=20).df[symbol]
+
+    # Calculate the momentum indicator
+    momentum = (historical_data['close'].iloc[-1] / historical_data['close'].iloc[0]) - 1
+
+    # Check if the momentum is positive
+    if momentum > 0:
+        # Place a trade for the stock
+        paper_api.submit_order(
+            symbol=symbol,
+            qty=1,
+            side='buy',
+            type='market',
+            time_in_force='gtc'
+        )
+        print(f"Placed a trade for {symbol} - {name} with positive momentum")
+
+    else:
+        print(f"{symbol} - {name} does not have positive momentum")
