@@ -63,5 +63,25 @@ for stock in stocks:
 
     if last_close > upper_band.iloc[-1] or last_close < lower_band.iloc[-1]:
         print(f"{symbol} is breaking outside of its Bollinger Bands")
+        if symbol not in ordered_symbols:
+            if last_close > upper_band.iloc[-1]:
+                paper_api.submit_order(
+                    symbol=symbol,
+                    qty='1',
+                    side='buy',
+                    type='market',
+                    time_in_force='gtc'
+                )
+                print(f"Ordering 1 share of {symbol} at {last_close}")
+            elif last_close < lower_band.iloc[-1]:
+                paper_api.submit_order(
+                    symbol=symbol,
+                    qty='1',
+                    side='sell',
+                    type='market',
+                    time_in_force='gtc'
+                )
+                print(f"Selling 1 share of {symbol} at {last_close}")
     else:
         print(f"{symbol} is not breaking outside of its Bollinger Bands")
+        
