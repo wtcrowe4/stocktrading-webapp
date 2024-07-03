@@ -55,6 +55,15 @@ for stock in stocks:
     if vix > 20:
         print(f"Trading {symbol} - VIX is high")
         #trade logic here for high VIX
+        # Place an order for the stock with high VIX
+        order = paper_api.submit_order(
+            symbol=symbol,
+            qty=1,
+            side='buy',
+            type='market',
+            time_in_force='gtc'
+        )
+        print(f"Order placed for {symbol}")
     else:
         print(f"Not trading {symbol} - VIX is low")
         #trade logic here for low VIX
