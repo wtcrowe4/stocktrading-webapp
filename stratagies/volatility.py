@@ -63,7 +63,19 @@ for stock in stocks:
             type='market',
             time_in_force='gtc'
         )
-        print(f"Order placed for {symbol}")
+        print(f"Order to buy placed for {symbol}")
     else:
         print(f"Not trading {symbol} - VIX is low")
         #trade logic here for low VIX
+        # Place an order for the stock with low VIX
+        order = paper_api.submit_order(
+            symbol=symbol,
+            qty=1,
+            side='sell',
+            type='market',
+            time_in_force='gtc'
+        )
+        print(f"Order to sell placed for {symbol}")
+
+
+conn.close()
