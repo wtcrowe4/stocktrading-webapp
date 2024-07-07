@@ -85,3 +85,4 @@ for stock in stocks:
     else:
         print(f"{symbol} is not breaking outside of its Bollinger Bands")
         
+conn.close()

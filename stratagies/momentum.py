@@ -70,3 +70,5 @@ for stock in stocks:
 
     else:
         print(f"{symbol} - {name} does not have positive momentum")
+
+conn.close()

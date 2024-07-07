@@ -72,3 +72,6 @@ for stock in stocks:
             print(f"Error placing trade for {symbol} - {name}: {str(e)}")
     else:
         print(f"{symbol} - {name} is not trending")
+
+
+conn.close()

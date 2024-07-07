@@ -90,5 +90,8 @@ for stock in stocks:
             print(f"Already an order for {stock}.")
 
 
+conn.close()
+
+
 
     

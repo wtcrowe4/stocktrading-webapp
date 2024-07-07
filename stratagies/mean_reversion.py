@@ -63,3 +63,5 @@ for stock in stocks:
         print(f"{symbol} ({name}) is below the mean and may be a candidate for mean reversion.")
     else:
         print(f"{symbol} ({name}) is not below the mean.")
+
+conn.close()
