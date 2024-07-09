@@ -61,7 +61,27 @@ for stock in stocks:
     current_price = api.get_last_trade(symbol).price
     if current_price < mean - std:
         print(f"{symbol} ({name}) is below the mean and may be a candidate for mean reversion.")
+        paper_api.submit_order(
+            symbol=symbol,
+            qty=1,
+            side='buy',
+            type='market',
+            time_in_force='gtc'
+        )
+
     else:
         print(f"{symbol} ({name}) is not below the mean.")
+        open_orders = paper_api.list_orders(status='open')
+        for order in open_orders:
+            if order.symbol == symbol:
+                print(f"Found open order for {symbol}. Selling...")
+                paper_api.submit_order(
+                    symbol=symbol,
+                    qty=1,
+                    side='sell',
+                    type='market',
+                    time_in_force='gtc'
+                )
+                break
 
 conn.close()
